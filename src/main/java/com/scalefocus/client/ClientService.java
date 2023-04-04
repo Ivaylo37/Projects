@@ -1,5 +1,8 @@
 package com.scalefocus.client;
 
+import com.scalefocus.order.Order;
+import com.scalefocus.order.OrderService;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +10,7 @@ public class ClientService {
 
     private static final ClientAccessor clientAccessor = new ClientAccessor();
     private static final ClientMapper clientMapper = new ClientMapper();
+    private static final OrderService orderService = new OrderService();
 
     public List<Client> getAllClients(){
         List<String> clientStrings = clientAccessor.takeAllClients();
@@ -36,6 +40,10 @@ public class ClientService {
     }
 
     public void removeClient(Client clientToBeDeleted){
+        if (clientToBeDeleted.getOrders().size() != 0){
+            System.out.println("This client has active orders, can not be deleted"); //to add exception
+            return;
+        }
         String toDelete = clientMapper.mapClientToString(clientToBeDeleted).trim();
         List<String> clientStrings = clientAccessor.takeAllClients();
         if (clientStrings.contains(toDelete)){
@@ -47,7 +55,9 @@ public class ClientService {
             newString = newString.concat("\n");
         }
         clientAccessor.deleteClient(newString);
-
     }
 
+    public List<Order> findOrders(String name){
+        return orderService.findAllOrdersByClient(name);
+    }
 }

@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 public class OrderMapper {
 
-    Order mapStringToOrder(String orderString){
+    Order mapStringToOrder(String orderString) {
         String[] tokens = orderString.split("_");
         Client client = new Client(tokens[0]);
         Book book = new Book(tokens[1]);
@@ -18,7 +18,7 @@ public class OrderMapper {
         return new Order(client, book, from, to);
     }
 
-    String mapOrderToString(Order order){
+    String mapOrderToString(Order order) {
         String client = order.getClient().getName();
         String book = order.getBook().getName();
         String from = order.getFromDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));

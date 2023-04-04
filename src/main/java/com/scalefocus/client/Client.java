@@ -21,4 +21,16 @@ public class Client {
     public List<Order> getOrders() {
         return orders;
     }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "name='" + name + '\'' +
+                ", orders=" + orders +
+                '}';
+    }
+
+    void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }

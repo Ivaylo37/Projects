@@ -13,29 +13,36 @@ public class ClientPresenter {
     private static final String CLIENT_NAME_INSERT = "Please insert the client's name : ";
     private static final String EDIT_NAME = "Please enter the new name : ";
     private static final String DELETE_CLIENT = "Please enter a client to delete : ";
+    private static final String CLIENT_NOT_FOUND = "Client not found, please try again";
     private static final String CLIENT_MENU_OPTIONS = "Choose what to do with the clients : " +
+            "\n ---------------------" +
             "\n 1:Show all clients" +
             "\n 2:Add a client" +
             "\n 3:Edit client" +
             "\n 4:Remove client" +
-            "\n 5:Back";
+            "\n 5:Back" +
+            "\n ---------------------";
 
     public void showClientMenu() {
-        System.out.println(CLIENT_MENU_OPTIONS);
-        int input = ConsoleRangeReader.readInt(MIN_MENU_OPTION, MAX_MENU_OPTION);
-        switch (input) {
-            case 1:
-                printAllClients();
-                break;
-            case 2:
-                addClient();
-                break;
-            case 3:
-                editClient();
-                break;
-            case 4:
-                removeClient();
-                break;
+        while (true) {
+            System.out.println(CLIENT_MENU_OPTIONS);
+            int input = ConsoleRangeReader.readInt(MIN_MENU_OPTION, MAX_MENU_OPTION);
+            switch (input) {
+                case 1:
+                    printAllClients();
+                    break;
+                case 2:
+                    addClient();
+                    break;
+                case 3:
+                    editClient();
+                    break;
+                case 4:
+                    removeClient();
+                    break;
+                case 5:
+                    return;
+            }
         }
     }
 
@@ -54,9 +61,14 @@ public class ClientPresenter {
     }
 
     public void editClient(){
+        printAllClients();
         System.out.println(CLIENT_NAME_INSERT);
         String nameToSearchFor = ConsoleReader.readString();
         Client clientToBeEdited = clientService.searchForClient(nameToSearchFor);
+        if (clientToBeEdited == null){
+            System.out.println(CLIENT_NOT_FOUND);//add exception
+            return;
+        }
         System.out.println(EDIT_NAME);
         String newName = ConsoleReader.readString();
         Client newClient = new Client(newName);
@@ -69,6 +81,10 @@ public class ClientPresenter {
         printAllClients();
         String nameToSearchFor = ConsoleReader.readString();
         Client clientToBeDeleted = clientService.searchForClient(nameToSearchFor);
+        if (clientToBeDeleted == null){
+            System.out.println(CLIENT_NOT_FOUND);//add exception
+            return;
+        }
         clientService.removeClient(clientToBeDeleted);
     }
 }

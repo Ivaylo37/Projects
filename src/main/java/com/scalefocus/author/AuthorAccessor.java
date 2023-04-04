@@ -17,12 +17,12 @@ public class AuthorAccessor {
         try {
             reader = new BufferedReader(new FileReader(FILE_AUTHORS_PATH));
             writer = new BufferedWriter(new FileWriter(FILE_AUTHORS_PATH, true));
-        }  catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("File not found with path : " + FILE_AUTHORS_PATH, e);
         }
     }
 
-    public List<String> readAllAuthors(){
+    public List<String> readAllAuthors() {
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(FILE_AUTHORS_PATH));
@@ -32,19 +32,19 @@ public class AuthorAccessor {
         return reader.lines().collect(Collectors.toList());
     }
 
-    public void addAuthor(String author){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_AUTHORS_PATH, true))){
+    public void addAuthor(String author) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_AUTHORS_PATH, true))) {
             writer.append(author);
             writer.append("\n");
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(FILE_NOT_FOUND_MESSAGE, e);
         }
     }
 
-    public void deleteAuthor(String withoutDeleted){
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_AUTHORS_PATH, false))){
+    public void deleteAuthor(String withoutDeleted) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_AUTHORS_PATH, false))) {
             writer.write(withoutDeleted);
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(FILE_NOT_FOUND_MESSAGE, e);
         }
     }

@@ -2,15 +2,21 @@ package com.scalefocus.book;
 
 import com.scalefocus.author.Author;
 
+import java.time.LocalDate;
+
 public class Book {
     private String name;
     private String author;
-    private String dateOfCreation;
+    private LocalDate dateOfCreation;
 
-    public Book (String name, String author, String date){
+    public Book(String name, String author, LocalDate date) {
         this.name = name;
         this.author = author;
         this.dateOfCreation = date;
+    }
+
+    public Book(String name) { // to be used for orderMapper
+        this.name = name;
     }
 
     public String getName() {
@@ -21,7 +27,7 @@ public class Book {
         return author;
     }
 
-    public String getDateOfCreation() {
+    public LocalDate getDateOfCreation() {
         return dateOfCreation;
     }
 

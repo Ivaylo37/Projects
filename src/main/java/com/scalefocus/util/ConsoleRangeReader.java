@@ -9,8 +9,8 @@ public final class ConsoleRangeReader {
         throw new UnsupportedOperationException();
     }
 
-    public static int readInt(int minValue, int maxValue){
-        if (minValue > maxValue){
+    public static int readInt(int minValue, int maxValue) {
+        if (minValue > maxValue) {
             throw new IllegalArgumentException(INVALID_RANGE_MESSAGE);
         }
         int input;
@@ -21,7 +21,7 @@ public final class ConsoleRangeReader {
             if (!isWithinRange) {
                 System.out.printf(NOT_WITHIN_RANGE_MESSAGE, minValue, maxValue);
             }
-        }while (!isWithinRange);
+        } while (!isWithinRange);
         return input;
-        }
     }
+}
