@@ -47,7 +47,7 @@ public class LibraryManagement {
                     break;
                 case 5:
                     return;
-            }//dates only after 1000 // when edit author to edit it in the book
+            }
         }
     }
 }
