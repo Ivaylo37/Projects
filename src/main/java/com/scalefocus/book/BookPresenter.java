@@ -1,6 +1,9 @@
 package com.scalefocus.book;
 
 import com.scalefocus.author.AuthorPresenter;
+import com.scalefocus.exception.InvalidAuthorException;
+import com.scalefocus.exception.InvalidBookException;
+import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 
@@ -14,8 +17,6 @@ public class BookPresenter {
 
     private static final int MIN_MENU_OPTION = 1;
     private static final int MAX_MENU_OPTION = 5;
-    private static final String BOOK_NOT_FOUND = "Book not found, please try again.";
-
     private static final String BOOK_NAME_INSERT = "Please enter the book's name :";
     private static final String BOOK_AUTHOR_INSERT = "Choose from the existing authors :";
     private static final String BOOK_DATE_OF_CREATION_INSERT = "Please enter a date of creation :";
@@ -29,12 +30,7 @@ public class BookPresenter {
     private static final String EDIT_OPTION_NAME = "Enter new name";
     private static final String EDIT_OPTION_AUTHOR = "Enter new author";
     private static final String EDIT_OPTION_DATE = "Enter new date";
-    private static final String ENTER_DAY = "Enter day";
-    private static final String INVALID_DAY = "Please enter a valid day";
-    private static final String ENTER_MONTH = "Enter month";
-    private static final String INVALID_MONTH = "Please enter a valid month";
-    private static final String ENTER_YEAR = "Enter year";
-    private static final String INVALID_YEAR = "Please enter a valid year";
+    private static final String DELETE_BOOK = "Choose book to delete by name";
 
     private static final String OPTIONS = "Choose what to do with the Books : " +
             "\n ---------------------" +
@@ -44,8 +40,6 @@ public class BookPresenter {
             "\n   4:Remove book" +
             "\n   5:Back" +
             "\n ---------------------";;
-
-    private static final String DELETE_BOOK = "Choose book to delete by name";
 
     public void showBookMenu() {
         while (true) {
@@ -82,28 +76,33 @@ public class BookPresenter {
         String name = ConsoleReader.readString();
         System.out.printf(BOOK_AUTHOR_INSERT);
         AuthorPresenter.printAllAuthors();
-        String validatedAuthorName = bookService.inputValidAuthor();
-        if (validatedAuthorName == null){
-            System.out.println("Invalid author, try again");
+        String validatedAuthorName;
+        try {
+            validatedAuthorName = bookService.inputValidAuthor();
+        } catch (InvalidAuthorException e) {
+            System.out.println(e.getMessage());
             return;
         }
         System.out.println(BOOK_DATE_OF_CREATION_INSERT);
-        LocalDate date = null;
+        LocalDate date;
         try {
             date = bookService.insertDate();
-        } catch (Exception e) {
+        } catch (InvalidDateException e) {
+            System.out.println(e.getMessage());
             return;
         }
         bookService.addBook(name, validatedAuthorName, date);
     }
 
-    public void editBook() {
+    public void editBook(){
         System.out.println(ENTER_BOOK_TO_EDIT);
         printAllBooks();
         String nameToSearchFor = ConsoleReader.readString();
-        Book bookToBeEdited = bookService.findBookByName(nameToSearchFor);
-        if (bookToBeEdited == null){//add exception
-            System.out.println(BOOK_NOT_FOUND);
+        Book bookToBeEdited;
+        try {
+            bookToBeEdited = bookService.findBookByName(nameToSearchFor);
+        } catch (InvalidBookException e) {
+            System.out.println(e.getMessage());
             return;
         }
         System.out.println(BOOK_EDIT_CHOICE);
@@ -117,16 +116,21 @@ public class BookPresenter {
                 editedBook = new Book(newField, bookToBeEdited.getAuthor(), bookToBeEdited.getDateOfCreation());
                 break;
             case 2:
-                System.out.println(EDIT_OPTION_AUTHOR);
-                newField = ConsoleReader.readString();
+                try {
+                    newField = bookService.inputValidAuthor();
+                } catch (InvalidAuthorException e) {
+                    System.out.println(e.getMessage());
+                    return;
+                }
                 editedBook = new Book(bookToBeEdited.getName(), newField, bookToBeEdited.getDateOfCreation());
                 break;
             case 3:
                 System.out.println(EDIT_OPTION_DATE);
-                LocalDate newDate = null;
+                LocalDate newDate;
                 try {
                     newDate = bookService.insertDate();
-                } catch (Exception e) {
+                } catch (InvalidDateException e) {
+                    System.out.println(e.getMessage());
                     return;
                 }
                 editedBook = new Book(bookToBeEdited.getName(), bookToBeEdited.getAuthor(), newDate);
@@ -136,13 +140,15 @@ public class BookPresenter {
         bookService.addBook(editedBook);
     }
 
-    public void removeBook() {
-        System.out.println(DELETE_BOOK);
+    public void removeBook(){
         printAllBooks();
+        System.out.println(DELETE_BOOK);
         String nameToSearchFor = ConsoleReader.readString();
-        Book bookToBeDeleted = bookService.findBookByName(nameToSearchFor);
-        if (bookToBeDeleted == null){//add exception
-            System.out.println(BOOK_NOT_FOUND);
+        Book bookToBeDeleted;
+        try {
+            bookToBeDeleted = bookService.findBookByName(nameToSearchFor);
+        } catch (InvalidBookException e) {
+            System.out.println(e.getMessage());
             return;
         }
         bookService.removeBook(bookToBeDeleted);

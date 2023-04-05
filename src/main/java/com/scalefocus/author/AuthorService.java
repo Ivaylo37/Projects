@@ -2,6 +2,7 @@ package com.scalefocus.author;
 
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookService;
+import com.scalefocus.exception.InvalidAuthorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,14 +29,19 @@ public class AuthorService {
         authorAccessor.addAuthor(authorToString);
     }
 
-    public Author findAuthorByName(String nameToLookFor) {
+    public Author findAuthorByName(String nameToLookFor) throws InvalidAuthorException {
         List<Author> authors = getAllAuthors();
+        Author foundAuthor = null;
         for (Author author : authors) {
             if (nameToLookFor.equalsIgnoreCase(author.getName())) {
-                return author;
+                foundAuthor = author;
+                break;
             }
         }
-        return null;
+        if (foundAuthor == null){
+            throw new InvalidAuthorException("Author not found");
+        }
+        return foundAuthor;
     }
 
     public void removeAuthor(Author authorToRemove) {
@@ -43,6 +49,14 @@ public class AuthorService {
         List<String> authorStrings = authorAccessor.readAllAuthors();
         if (authorStrings.contains(toDelete)) {
             authorStrings.remove(toDelete);
+        }
+        else {
+            try {
+                throw new InvalidAuthorException("Author not found.");
+            } catch (InvalidAuthorException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         String newString = new String();
         for (String string : authorStrings) {
@@ -55,4 +69,5 @@ public class AuthorService {
     public List<Book> findAllBooks(String authorName){
         return bookService.findBookByAuthor(authorName);
     }
+
 }

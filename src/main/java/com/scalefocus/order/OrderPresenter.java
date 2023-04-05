@@ -1,32 +1,25 @@
 package com.scalefocus.order;
 
-import com.scalefocus.author.Author;
-import com.scalefocus.author.AuthorService;
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookService;
 import com.scalefocus.client.Client;
-import com.scalefocus.client.ClientService;
+import com.scalefocus.exception.*;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 import com.scalefocus.util.DateFormatter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.PrimitiveIterator;
+import java.util.Locale;
 
 public class OrderPresenter {
 
-    private static final ClientService clientService = new ClientService();
     private static final OrderService orderService = new OrderService();
     private static final BookService bookService = new BookService();
     private static final String BOOK_NAME_DELETE = "Enter book name :";
-    private static final String BOOK_NOT_FOUND = "Book not found, please try again.";
-    private static final String CLIENT_NOT_FOUND = "Client not found, please try again";
     private static final String CLIENT_NAME_INSERT = "Please enter a client's name from the list";
     private static final String BOOK_NAME_INSERT = "Please enter a book's name from the list";
-    private static final String ORDER_NOT_FOUND = "Order not found, please try again.";
     private static final String FILTER_ORDERS_OPTIONS = "Choose how to filter the orders :\n" +
             "1. By client \n" +
             "2. By issued date \n" +
@@ -120,9 +113,11 @@ public class OrderPresenter {
                 orderService.showAllClients();
                 System.out.println(CLIENT_NAME_INSERT);
                 String name = ConsoleReader.readString();
-                List<Order> orders = orderService.findAllOrdersByClient(name);
-                if (orders.size() == 0){//add exception
-                    System.out.println(ORDER_NOT_FOUND);
+                List<Order> orders = null;
+                try {
+                    orders = orderService.findAllOrdersByClient(name);
+                } catch (NoOrdersFoundException e) {
+                    System.out.println(e.getMessage());
                     return;
                 }
                 for (Order order : orders){
@@ -134,15 +129,36 @@ public class OrderPresenter {
                 int choiceIssuedDate = ConsoleRangeReader.readInt(MIN_FILTER_OPTION, MAX_FILTER_OPTION);
                 switch (choiceIssuedDate){
                     case 1:
-                        LocalDate on = orderService.insertDate();
+                        LocalDate on = null;
+                        try {
+                            on = orderService.insertDate();
+                        }
+                        catch (InvalidDateException e){
+                            System.out.println(e.getMessage());
+                            return;
+                        }
                         orderService.ordersOnDate(on);
                         break;
                     case 2:
-                        LocalDate before = orderService.insertDate();
+                        LocalDate before = null;
+                        try {
+                            before = orderService.insertDate();
+                        }
+                        catch (InvalidDateException e){
+                            System.out.println(e.getMessage());
+                            return;
+                        }
                         orderService.ordersBeforeDate(before);
                         break;
                     case 3:
-                        LocalDate after = orderService.insertDate();
+                        LocalDate after = null;
+                        try {
+                            after = orderService.insertDate();
+                        }
+                        catch (InvalidDateException e){
+                            System.out.println(e.getMessage());
+                            return;
+                        }
                         orderService.ordersAfterDate(after);
                         break;
                 }
@@ -152,15 +168,36 @@ public class OrderPresenter {
                 int choiceDueDate = ConsoleRangeReader.readInt(MIN_FILTER_OPTION, MAX_FILTER_OPTION);
                 switch (choiceDueDate){
                     case 1:
-                        LocalDate on = orderService.insertDate();
+                        LocalDate on = null;
+                        try {
+                            on = orderService.insertDate();
+                        }
+                        catch (InvalidDateException e){
+                            System.out.println(e.getMessage());
+                            return;
+                        }
                         orderService.ordersOnDate(on);
                         break;
                     case 2:
-                        LocalDate before = orderService.insertDate();
+                        LocalDate before = null;
+                        try {
+                            before = orderService.insertDate();
+                        }
+                        catch (InvalidDateException e){
+                            System.out.println(e.getMessage());
+                            return;
+                        }
                         orderService.ordersBeforeDate(before);
                         break;
                     case 3:
-                        LocalDate after = orderService.insertDate();
+                        LocalDate after = null;
+                        try {
+                            after = orderService.insertDate();
+                        }
+                        catch (InvalidDateException e){
+                            System.out.println(e.getMessage());
+                            return;
+                        }
                         orderService.ordersAfterDate(after);
                         break;
                 }
@@ -172,17 +209,21 @@ public class OrderPresenter {
         orderService.showAllClients();
         System.out.println(CLIENT_NAME_INSERT);
         String clientName = ConsoleReader.readString();
-        Client client = clientService.searchForClient(clientName);//to move in service
-        if (client == null){// add exception
-            System.out.println(CLIENT_NOT_FOUND);
+        Client client = null;
+        try {
+            client = orderService.findExistingClient(clientName);
+        } catch (InvalidClientException e) {
+            System.out.println(e.getMessage());
             return;
         }
-        orderService.showAllAuthors();
+        orderService.showAllBooks();
         System.out.println(BOOK_NAME_INSERT);
         String bookName = ConsoleReader.readString();
-        Book book = bookService.findBookByName(bookName);
-        if (book == null){
-            System.out.println(BOOK_NOT_FOUND);
+        Book book = null;
+        try {
+            book = bookService.findBookByName(bookName);
+        } catch (InvalidBookException e) {
+            System.out.println(e.getMessage());
             return;
         }
         String from = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
@@ -195,13 +236,15 @@ public class OrderPresenter {
 
     public void editOrder() {
         System.out.println(EDIT_ORDER_CHOOSE);
-        printAllOrders();// to filter by client
+        printAllOrders();
         String nameToSearchFor = ConsoleReader.readString();
         System.out.println(EDIT_OPTION_BOOK_NAME);
         String bookToSearchFor = ConsoleReader.readString();
-        Order orderToBeEdited = orderService.findOrderByClient(nameToSearchFor, bookToSearchFor);
-        if (orderToBeEdited == null){//add exception
-            System.out.println(ORDER_NOT_FOUND);
+        Order orderToBeEdited = null;
+        try {
+            orderToBeEdited = orderService.findOrderByClientAndBook(nameToSearchFor, bookToSearchFor);
+        } catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
             return;
         }
         System.out.println(EDIT_OPTIONS);
@@ -256,9 +299,11 @@ public class OrderPresenter {
         String nameToSearchFor = ConsoleReader.readString();
         System.out.println(BOOK_NAME_DELETE);
         String bookToSearchFor = ConsoleReader.readString();
-        Order orderToBeDeleted = orderService.findOrderByClient(nameToSearchFor, bookToSearchFor);
-        if (orderToBeDeleted == null){// add exception
-            System.out.println(ORDER_NOT_FOUND);
+        Order orderToBeDeleted = null;
+        try {
+            orderToBeDeleted = orderService.findOrderByClientAndBook(nameToSearchFor, bookToSearchFor);
+        } catch (InvalidOrderException e) {
+            System.out.println(e.getMessage());
             return;
         }
         orderService.deleteOrder(orderToBeDeleted);

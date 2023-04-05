@@ -1,5 +1,6 @@
 package com.scalefocus.client;
 
+import com.scalefocus.exception.InvalidClientException;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 
@@ -13,7 +14,6 @@ public class ClientPresenter {
     private static final String CLIENT_NAME_INSERT = "Please insert the client's name : ";
     private static final String EDIT_NAME = "Please enter the new name : ";
     private static final String DELETE_CLIENT = "Please enter a client to delete : ";
-    private static final String CLIENT_NOT_FOUND = "Client not found, please try again";
     private static final String CLIENT_MENU_OPTIONS = "Choose what to do with the clients : " +
             "\n ---------------------" +
             "\n 1:Show all clients" +
@@ -64,9 +64,11 @@ public class ClientPresenter {
         printAllClients();
         System.out.println(CLIENT_NAME_INSERT);
         String nameToSearchFor = ConsoleReader.readString();
-        Client clientToBeEdited = clientService.searchForClient(nameToSearchFor);
-        if (clientToBeEdited == null){
-            System.out.println(CLIENT_NOT_FOUND);//add exception
+        Client clientToBeEdited = null;
+        try {
+            clientToBeEdited = clientService.searchForClient(nameToSearchFor);
+        } catch (InvalidClientException e) {
+            System.out.println(e.getMessage());
             return;
         }
         System.out.println(EDIT_NAME);
@@ -80,9 +82,11 @@ public class ClientPresenter {
         System.out.println(DELETE_CLIENT);
         printAllClients();
         String nameToSearchFor = ConsoleReader.readString();
-        Client clientToBeDeleted = clientService.searchForClient(nameToSearchFor);
-        if (clientToBeDeleted == null){
-            System.out.println(CLIENT_NOT_FOUND);//add exception
+        Client clientToBeDeleted = null;
+        try {
+            clientToBeDeleted = clientService.searchForClient(nameToSearchFor);
+        } catch (InvalidClientException e) {
+            System.out.println(e.getMessage());
             return;
         }
         clientService.removeClient(clientToBeDeleted);

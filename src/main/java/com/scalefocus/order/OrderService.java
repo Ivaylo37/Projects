@@ -1,17 +1,19 @@
 package com.scalefocus.order;
-
-import com.scalefocus.author.Author;
-import com.scalefocus.author.AuthorService;
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookService;
 import com.scalefocus.client.Client;
 import com.scalefocus.client.ClientService;
+import com.scalefocus.exception.InvalidClientException;
+import com.scalefocus.exception.InvalidDateException;
+import com.scalefocus.exception.InvalidOrderException;
+import com.scalefocus.exception.NoOrdersFoundException;
 import com.scalefocus.util.ConsoleReader;
 import com.scalefocus.util.DateFormatter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderService {
 
@@ -35,19 +37,22 @@ public class OrderService {
         orderAccessor.addOrder(orderToString);
     }
 
-    public Order findOrderByClient(String nameToLookFor, String bookToLookFor) {
+    public Order findOrderByClientAndBook(String nameToLookFor, String bookToLookFor) throws InvalidOrderException{
         List<Order> orders = getAllOrders();
-        boolean found = false;
+        Order foundOrder = null;
         for (Order order : orders) {
-            if (nameToLookFor.equalsIgnoreCase(order.getClient().getName()) && bookToLookFor.equalsIgnoreCase(order.getBook().getName())) {
-                found = true;
-                return order;
+            if (nameToLookFor.equalsIgnoreCase(order.getClient().getName())
+                    && bookToLookFor.equalsIgnoreCase(order.getBook().getName())) {
+                foundOrder = order;
             }
         }
-        return null;
+        if (foundOrder == null){
+            throw new InvalidOrderException("Order not found");
+        }
+        return foundOrder;
     }
 
-    public List<Order> findAllOrdersByClient(String nameToLookFor){
+    public List<Order> findAllOrdersByClient(String nameToLookFor) throws NoOrdersFoundException{
         List<Order> orders = getAllOrders();
         List<Order> foundOrders = new ArrayList<>();
         for (Order order : orders) {
@@ -55,7 +60,20 @@ public class OrderService {
                 foundOrders.add(order);
             }
         }
+        if (foundOrders.size() == 0){
+            throw new NoOrdersFoundException("No orders found for this client");
+        }
         return foundOrders;
+    }
+
+    public Client findExistingClient(String name) throws InvalidClientException{
+        Client client = null;
+        try {
+            client = clientService.searchForClient(name);
+        } catch (InvalidClientException e) {
+            throw new InvalidClientException("Client not found.");
+        }
+        return client;
     }
 
     public void deleteOrder(Order orderToBeDeleted) { //to remove the order from the client
@@ -63,6 +81,14 @@ public class OrderService {
         List<String> orderStrings = orderAccessor.readAllOrders();
         if (orderStrings.contains(toDelete)) {
             orderStrings.remove(toDelete);
+        }
+        else {
+            try {
+                throw new InvalidOrderException("Order not found");
+            } catch (InvalidOrderException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         String newString = new String();
         for (String string : orderStrings) {
@@ -78,7 +104,7 @@ public class OrderService {
             System.out.println(client);
         }
     }
-    public void showAllAuthors(){
+    public void showAllBooks(){
         List<Book> books = bookService.getAllBooks();
         for (Book book : books){
             System.out.println(book);
@@ -95,23 +121,15 @@ public class OrderService {
         return matchedOrders;
     }
 
-    public LocalDate insertDate(){
-        System.out.println("Enter day");
-        int day = ConsoleReader.readInt();
-        String dayString = bookService.validateDay(day);
-        if (dayString == "") {
-            System.out.println("Invalid day");
+    public LocalDate insertDate() throws InvalidDateException{
+        LocalDate date = null;
+        try {
+            date = bookService.insertDate();
         }
-        System.out.println("Enter month");
-        int month = ConsoleReader.readInt();
-        String monthString = bookService.validateMonth(month);
-        if (monthString == "") {
-            System.out.println("Invalid month");
+        catch (InvalidDateException e){
+            throw new InvalidDateException("Invalid date");
         }
-        System.out.println("Enter year");
-        String year = ConsoleReader.readString();
-        String date = String.join("/", dayString, monthString, year);
-        return DateFormatter.formatter(date);
+        return date;
     }
     public void ordersOnDate(LocalDate date){
         List<Order> allOrders = getAllOrders();
@@ -123,7 +141,12 @@ public class OrderService {
             }
         }
         if (!found){
-            System.out.println("No orders on this date");
+            try {
+                throw new NoOrdersFoundException("No orders found on this date");
+            } catch (NoOrdersFoundException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -137,7 +160,12 @@ public class OrderService {
             }
         }
         if (!found){
-            System.out.println("No orders before this date");
+            try {
+                throw new NoOrdersFoundException("No orders found before this date");
+            } catch (NoOrdersFoundException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 
@@ -151,7 +179,12 @@ public class OrderService {
             }
         }
         if (!found){
-            System.out.println("No orders after this date");
+            try {
+                throw new NoOrdersFoundException("No orders found after this date");
+            } catch (NoOrdersFoundException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
     }
 }

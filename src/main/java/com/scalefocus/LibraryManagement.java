@@ -35,19 +35,19 @@ public class LibraryManagement {
             switch (choice) {
                 case 1:
                     bookPresenter.showBookMenu();
-                    break;// added exception for dates in add/edit book
+                    break;
                 case 2:
                     authorPresenter.showAuthorMenu();
                     break;
                 case 3:
-                    orderPresenter.showOrderMenu();
+                    orderPresenter.showOrderMenu();// to delete the order from the client/ refactor edit order
                     break;
                 case 4:
                     clientPresenter.showClientMenu();
                     break;
                 case 5:
                     return;
-            }
+            }//dates only after 1000 // when edit author to edit it in the book
         }
     }
 }

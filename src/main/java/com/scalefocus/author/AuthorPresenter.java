@@ -2,6 +2,7 @@ package com.scalefocus.author;
 
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookService;
+import com.scalefocus.exception.InvalidAuthorException;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 
@@ -10,14 +11,12 @@ import java.util.List;
 public class AuthorPresenter {
 
     private static final AuthorService authorService = new AuthorService();
-    private static final String AUTHOR_NOT_FOUND = "Author not found, please try again.";
     private static final int MIN_MENU_OPTION = 1;
     private static final int MAX_MENU_OPTION = 5;
     private static final String AUTHOR_NAME_INSERT = "Please enter the author's name :";
     private static final String AUTHOR_TO_EDIT = "Author to edit";
     private static final String AUTHOR_NAME_EDIT = "Enter new name";
-    private static final String AUTHOR_TO_DELETE = "Select author to delete by name : ";
-    private static final String OPTIONS = "Choose what to do with the Books : " +
+    private static final String OPTIONS = "Choose what to do with the Authors : " +
             "\n ---------------------" +
             "\n 1:Show all authors" +
             "\n 2:Add an author" +
@@ -66,9 +65,11 @@ public class AuthorPresenter {
         System.out.println(AUTHOR_TO_EDIT);
         printAllAuthors();
         String nameToSearchFor = ConsoleReader.readString();
-        Author authorToBeEdited = authorService.findAuthorByName(nameToSearchFor);
-        if (authorToBeEdited == null){//add exception
-            System.out.println(AUTHOR_NOT_FOUND);
+        Author authorToBeEdited = null;
+        try {
+            authorToBeEdited = authorService.findAuthorByName(nameToSearchFor);
+        } catch (InvalidAuthorException e) {
+            System.out.println(e.getMessage());
             return;
         }
         System.out.println(AUTHOR_NAME_EDIT);
@@ -81,9 +82,11 @@ public class AuthorPresenter {
         System.out.println(AUTHOR_TO_EDIT);
         printAllAuthors();
         String nameToSearchFor = ConsoleReader.readString();
-        Author authorToDeleted = authorService.findAuthorByName(nameToSearchFor);
-        if (authorToDeleted == null){//add exception
-            System.out.println(AUTHOR_NOT_FOUND);
+        Author authorToDeleted = null;
+        try {
+            authorToDeleted = authorService.findAuthorByName(nameToSearchFor);
+        } catch (InvalidAuthorException e) {
+            System.out.println(e.getMessage());
             return;
         }
         authorService.removeAuthor(authorToDeleted);

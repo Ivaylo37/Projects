@@ -2,6 +2,10 @@ package com.scalefocus.book;
 
 import com.scalefocus.author.Author;
 import com.scalefocus.author.AuthorService;
+import com.scalefocus.exception.BookNotDeletableException;
+import com.scalefocus.exception.InvalidAuthorException;
+import com.scalefocus.exception.InvalidBookException;
+import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.order.Order;
 import com.scalefocus.order.OrderService;
 import com.scalefocus.util.ConsoleReader;
@@ -12,17 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookService {
-
-    private static final Exception dateException = new RuntimeException("The date is invalid");
     private static final BookAccessor bookAccessor = new BookAccessor();
     private static final BookMapper bookMapper = new BookMapper();
     private static final OrderService orderService = new OrderService();
     private static final AuthorService authorService = new AuthorService();
-
-    private static final String BOOK_FOUND = "Book found";
-
-    private static final String BOOK_NOT_FOUND = "Book not found, please try again.";
     private static final String BOOK_AUTHOR_INSERT = "Enter the author's name :";
+
+
 
     public List<Book> getAllBooks() {
         List<String> bookStrings = bookAccessor.readAllBooks();
@@ -45,16 +45,19 @@ public class BookService {
         bookAccessor.addBook(bookToString);
     }
 
-    public Book findBookByName(String nameToLookFor) {
+    public Book findBookByName(String nameToLookFor) throws InvalidBookException{
         List<Book> books = getAllBooks();
-        boolean found = false;
+        Book foundBook = null;
         for (Book book : books) {
             if (nameToLookFor.equalsIgnoreCase(book.getName())) {
-                found = true;
-                return book;
+                foundBook = book;
+                break;
             }
         }
-        return null; //TODO
+        if (foundBook == null){
+            throw new InvalidBookException("Book not found.");
+        }
+        return foundBook;
     }
 
     public List<Book> findBookByAuthor(String nameToLookFor) {
@@ -71,8 +74,10 @@ public class BookService {
     }
 
     public void removeBook(Book bookToDelete) {
-        if (existingOrderForBook(bookToDelete)){
-            System.out.println("This book is ordered, can not be removed");
+        try {
+            boolean existsInOrder = existingOrderForBook(bookToDelete);
+        } catch (BookNotDeletableException e) {
+            System.out.println(e.getMessage());
             return;
         }
         String toDelete = bookMapper.mapBookToString(bookToDelete).trim();
@@ -88,12 +93,13 @@ public class BookService {
         bookAccessor.deleteBook(newString);
     }
 
-    public boolean existingOrderForBook(Book book){
+    public boolean existingOrderForBook(Book book) throws BookNotDeletableException{
         List<Order> orders = orderService.getAllOrders();
         boolean orderFound = false;
         for (Order order : orders){
-            if (order.getBook().getName().equalsIgnoreCase(book.getAuthor())){
+            if (order.getBook().getName().equalsIgnoreCase(book.getName())){
                 orderFound = true;
+                throw new BookNotDeletableException("There is an order including this book. Can not be deleted/edited");
             }
         }
         return orderFound;
@@ -122,56 +128,44 @@ public class BookService {
     }
 
     public String validateYear(int year) {
-        if (year < 2023) {
+        if (year > 999 && year <= 2023) {
             return String.valueOf(year);
         } else return "";
     }
 
-    public LocalDate insertDate() throws Exception{
+    public LocalDate insertDate() throws InvalidDateException {
         System.out.println("Enter day");
         int day = ConsoleReader.readInt();
         String dayString = validateDay(day);
         if (dayString == "") {
-            try {
-                throw dateException;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException(e);
-            }
+            throw new InvalidDateException("The day is invalid");
         }
         System.out.println("Enter month");
         int month = ConsoleReader.readInt();
         String monthString = validateMonth(month);
         if (monthString == "") {
-            try {
-                throw dateException;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException(e);
-            }
+            throw new InvalidDateException("The month is invalid");
         }
         System.out.println("Enter year");
         int year = ConsoleReader.readInt();
         String yearString = validateYear(year);
         if (yearString == ""){
-            try {
-                throw dateException;
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException(e);
-            }
+            throw new InvalidDateException("The year is invalid");
         }
         String date = String.join("/", dayString, monthString, yearString);
         return DateFormatter.formatter(date);
     }
 
-    public String inputValidAuthor(){
+    public String inputValidAuthor() throws InvalidAuthorException{
         System.out.printf(BOOK_AUTHOR_INSERT);
         String authorName = ConsoleReader.readString();
-        Author author = authorService.findAuthorByName(authorName);
-        if (author != null){
-            return authorService.findAuthorByName(authorName).getName();
+        Author author;
+        try {
+            author = authorService.findAuthorByName(authorName);
+        } catch (InvalidAuthorException e) {
+            throw new InvalidAuthorException("Author not found");
         }
-        return null;
+        String foundAuthor = author.getName();;
+        return foundAuthor;
     }
 }

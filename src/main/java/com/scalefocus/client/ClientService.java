@@ -1,5 +1,8 @@
 package com.scalefocus.client;
 
+import com.scalefocus.exception.ClientNotDeletableException;
+import com.scalefocus.exception.InvalidClientException;
+import com.scalefocus.exception.NoOrdersFoundException;
 import com.scalefocus.order.Order;
 import com.scalefocus.order.OrderService;
 
@@ -27,22 +30,29 @@ public class ClientService {
         clientAccessor.addClient(clientToString);
     }
 
-    public Client searchForClient(String nameToSearchFor){
+    public Client searchForClient(String nameToSearchFor) throws InvalidClientException{
         List<Client> clients = getAllClients();
-        boolean found = false;
+        Client foundCLient = null;
         for(Client client : clients){
             if (nameToSearchFor.equalsIgnoreCase(client.getName())){
-                found = true;
-                return client;
+                foundCLient = client;
+                break;
             }
         }
-        return null;
+        if (foundCLient == null){
+            throw new InvalidClientException("Client not found");
+        }
+        return foundCLient;
     }
 
     public void removeClient(Client clientToBeDeleted){
         if (clientToBeDeleted.getOrders().size() != 0){
-            System.out.println("This client has active orders, can not be deleted"); //to add exception
-            return;
+            try {
+                throw new ClientNotDeletableException("This client has order/s");
+            } catch (ClientNotDeletableException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         String toDelete = clientMapper.mapClientToString(clientToBeDeleted).trim();
         List<String> clientStrings = clientAccessor.takeAllClients();
@@ -58,6 +68,12 @@ public class ClientService {
     }
 
     public List<Order> findOrders(String name){
-        return orderService.findAllOrdersByClient(name);
+        List foundOrders = new ArrayList<>();
+        try {
+            foundOrders = orderService.findAllOrdersByClient(name);
+        } catch (NoOrdersFoundException e) {
+            // no message because of the mapper
+        }
+        return foundOrders;
     }
 }
