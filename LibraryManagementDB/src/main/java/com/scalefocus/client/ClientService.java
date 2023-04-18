@@ -3,15 +3,14 @@ package com.scalefocus.client;
 import com.scalefocus.exception.InvalidClientException;
 import org.springframework.stereotype.Service;
 import java.util.List;
+
 @Service
 public class ClientService {
 
     private final ClientAccessor clientAccessor;
-    private final ClientMapper clientMapper;
 
-    public ClientService(ClientAccessor clientAccessor, ClientMapper clientMapper) {
+    public ClientService(ClientAccessor clientAccessor) {
         this.clientAccessor = clientAccessor;
-        this.clientMapper = clientMapper;
     }
 
     public List<Client> getAllClients(){
@@ -19,8 +18,7 @@ public class ClientService {
     }
 
     public void addClient(Client client){
-        String clientToString = clientMapper.mapClientToString(client);
-        clientAccessor.addClient(clientToString);
+        clientAccessor.addClient(client.getName());
     }
 
     public Client searchForClient(String nameToSearchFor) throws InvalidClientException{

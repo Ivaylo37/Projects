@@ -3,9 +3,9 @@ package com.scalefocus.book;
 import com.scalefocus.author.Author;
 import com.scalefocus.db.JdbcDriver;
 import org.springframework.stereotype.Component;
-
 import java.sql.*;
 import java.util.List;
+
 @Component
 public class BookAccessor {
     private final BookMapper bookMapper;

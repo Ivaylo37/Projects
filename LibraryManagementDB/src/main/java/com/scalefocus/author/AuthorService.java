@@ -1,12 +1,9 @@
 package com.scalefocus.author;
 
-import com.scalefocus.book.Book;
-import com.scalefocus.book.BookService;
 import com.scalefocus.exception.InvalidAuthorException;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class AuthorService {
 

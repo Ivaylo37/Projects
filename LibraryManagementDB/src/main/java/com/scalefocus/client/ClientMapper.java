@@ -1,11 +1,11 @@
 package com.scalefocus.client;
 
 import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 public class ClientMapper {
 
@@ -21,10 +21,6 @@ public class ClientMapper {
             throw new RuntimeException(e);
         }
         return clientList;
-    }
-
-    String mapClientToString(Client client) {
-        return client.getName();
     }
 
     public int mapResultSetToInt(ResultSet resultSet){

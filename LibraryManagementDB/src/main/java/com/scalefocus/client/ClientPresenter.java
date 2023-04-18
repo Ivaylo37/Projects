@@ -4,13 +4,13 @@ import com.scalefocus.exception.InvalidClientException;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 import org.springframework.stereotype.Component;
-
 import static com.scalefocus.constants.GlobalConstants.*;
-
 import java.util.List;
+
 @Component
 public class ClientPresenter {
     private final ClientService clientService;
+
     public ClientPresenter(ClientService clientService) {
         this.clientService = clientService;
     }

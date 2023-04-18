@@ -2,9 +2,9 @@ package com.scalefocus.client;
 
 import com.scalefocus.db.JdbcDriver;
 import org.springframework.stereotype.Component;
-
 import java.sql.*;
 import java.util.List;
+
 @Component
 public class ClientAccessor {
     private final ClientMapper clientMapper;

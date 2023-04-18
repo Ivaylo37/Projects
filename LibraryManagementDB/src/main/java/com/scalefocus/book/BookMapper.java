@@ -3,12 +3,12 @@ package com.scalefocus.book;
 import com.scalefocus.author.Author;
 import com.scalefocus.author.AuthorAccessor;
 import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 public class BookMapper {
 

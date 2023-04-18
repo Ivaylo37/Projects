@@ -4,10 +4,9 @@ import com.scalefocus.exception.InvalidAuthorException;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
-
 import static com.scalefocus.constants.GlobalConstants.*;
+
 @Component
 public class AuthorPresenter {
     private final AuthorService authorService;

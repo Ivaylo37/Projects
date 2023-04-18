@@ -1,7 +1,6 @@
 package com.scalefocus.author;
 
 import com.scalefocus.book.Book;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -9,11 +9,8 @@ import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.util.ConsoleReader;
 import com.scalefocus.util.DateFormatter;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-
 import static com.scalefocus.constants.GlobalConstants.BS_BOOK_AUTHOR_INSERT;
 
 @Service
@@ -137,12 +134,14 @@ public class BookService {
         } catch (InvalidAuthorException e) {
             throw new InvalidAuthorException("Author not found");
         }
-        String foundAuthor = author.getName();;
+        String foundAuthor = author.getName();
         return foundAuthor;
     }
+
     public int getBookID(Book book){
         return bookAccessor.getIDbyBook(book);
     }
+
     public void printAllAuthors(){
         List<Author> authorList = authorService.getAllAuthors();
         for (Author author : authorList) {
