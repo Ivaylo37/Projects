@@ -3,15 +3,20 @@ package com.scalefocus.author;
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookService;
 import com.scalefocus.exception.InvalidAuthorException;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class AuthorService {
 
-    private static final BookService bookService = new BookService();
-    private static final AuthorAccessor authorAccessor = new AuthorAccessor();
-    private static final AuthorMapper authorMapper = new AuthorMapper();
+    private final AuthorAccessor authorAccessor ;
+    private final AuthorMapper authorMapper;
+
+    public AuthorService(AuthorAccessor authorAccessor, AuthorMapper authorMapper) {
+        this.authorAccessor = authorAccessor;
+        this.authorMapper = authorMapper;
+    }
 
     public List<Author> getAllAuthors() {
         return authorAccessor.getAllAuthors();
@@ -57,17 +62,7 @@ public class AuthorService {
         }
         authorAccessor.deleteAuthor(authorToRemove.getName());
     }
-
-    public List<Book> findAllBooks(String authorName){
-        return bookService.findBookByAuthor(authorName);
-    }
-
     public void editAuthor(String oldName, String newName){
         authorAccessor.editAuthor(oldName, newName);
     }
-
-    public int getAuthorID(Author author){
-        return authorAccessor.getIDbyAuthor(author);
-    }
-
 }

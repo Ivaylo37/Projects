@@ -1,14 +1,17 @@
 package com.scalefocus.client;
 
-import com.scalefocus.author.Author;
 import com.scalefocus.db.JdbcDriver;
+import org.springframework.stereotype.Component;
 
-import java.io.*;
 import java.sql.*;
 import java.util.List;
-
+@Component
 public class ClientAccessor {
-    private static final ClientMapper clientMapper = new ClientMapper();
+    private final ClientMapper clientMapper;
+
+    public ClientAccessor(ClientMapper clientMapper) {
+        this.clientMapper = clientMapper;
+    }
 
     public List<Client> getAllClients() {
         ResultSet resultSet;
@@ -20,13 +23,6 @@ public class ClientAccessor {
             throw new RuntimeException(e);
         }
         return clients;
-        /*BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(CLIENT_FILE_PATH));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return reader.lines().collect(Collectors.toList());*/
     }
 
     public void addClient(String clientName) {
@@ -38,11 +34,6 @@ public class ClientAccessor {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        /*try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENT_FILE_PATH, true))) {
-            writer.append(string);
-        } catch (IOException e) {
-            throw new RuntimeException(FILE_NOT_FOUND_MESSAGE, e);
-        }*/
     }
 
     public void deleteClient(String toBeDeleted) {
@@ -54,11 +45,6 @@ public class ClientAccessor {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
-        /*try (BufferedWriter writer = new BufferedWriter(new FileWriter(CLIENT_FILE_PATH, false))) {
-            writer.write(fileWithoutTheDeleted);
-        } catch (IOException e) {
-            throw new RuntimeException(FILE_NOT_FOUND_MESSAGE, e);
-        }*/
     }
 
     public void editClient(String toBeEdited, String newName) {

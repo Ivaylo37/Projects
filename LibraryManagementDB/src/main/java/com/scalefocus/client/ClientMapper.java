@@ -1,19 +1,13 @@
 package com.scalefocus.client;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class ClientMapper {
-
-    private static final ClientService clientService = new ClientService();
-
-    Client mapStringToClient(String clientString) {
-        Client client = new Client(clientString);
-        client.setOrders(clientService.findOrders(client.getName()));
-        return client;
-    }
 
     public List<Client> mapResultSetToClients(ResultSet clientsResultSet){
         List<Client> clientList = new ArrayList<>();
@@ -44,6 +38,4 @@ public class ClientMapper {
         }
         return id;
     }
-
-
 }

@@ -1,13 +1,17 @@
 package com.scalefocus.author;
-
 import com.scalefocus.db.JdbcDriver;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.List;
-
+@Component
 public class AuthorAccessor {
 
-    private static final AuthorMapper authorMapper = new AuthorMapper();
+    private final AuthorMapper authorMapper;
+
+    public AuthorAccessor(AuthorMapper authorMapper) {
+        this.authorMapper = authorMapper;
+    }
 
     public List<Author> getAllAuthors() {
         ResultSet resultSet;
@@ -69,20 +73,5 @@ public class AuthorAccessor {
             throw new RuntimeException(e);
         }
         return author;
-    }
-
-    public int getIDbyAuthor(Author author){
-        int id;
-        ResultSet resultSet;
-        String sql = "SELECT author_id FROM library_management.authors WHERE author_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
-                connection.prepareStatement(sql)){
-            preparedStatement.setString(1, author.getName());
-            resultSet = preparedStatement.executeQuery();
-            id = authorMapper.mapResultSetToInt(resultSet);
-        }catch (SQLException e){
-            throw new RuntimeException(e);
-        }
-        return id;
     }
 }

@@ -3,30 +3,22 @@ package com.scalefocus.client;
 import com.scalefocus.exception.InvalidClientException;
 import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
+import org.springframework.stereotype.Component;
+
+import static com.scalefocus.constants.GlobalConstants.*;
 
 import java.util.List;
-
+@Component
 public class ClientPresenter {
-
-    private static final ClientService clientService = new ClientService();
-    private static final int MIN_MENU_OPTION = 1;
-    private static final int MAX_MENU_OPTION = 5;
-    private static final String CLIENT_NAME_INSERT = "Please insert the client's name : ";
-    private static final String EDIT_NAME = "Please enter the new name : ";
-    private static final String DELETE_CLIENT = "Please enter a client to delete : ";
-    private static final String CLIENT_MENU_OPTIONS = "Choose what to do with the clients : " +
-            "\n ---------------------" +
-            "\n 1:Show all clients" +
-            "\n 2:Add a client" +
-            "\n 3:Edit client" +
-            "\n 4:Remove client" +
-            "\n 5:Back" +
-            "\n ---------------------";
+    private final ClientService clientService;
+    public ClientPresenter(ClientService clientService) {
+        this.clientService = clientService;
+    }
 
     public void showClientMenu() {
         while (true) {
-            System.out.println(CLIENT_MENU_OPTIONS);
-            int input = ConsoleRangeReader.readInt(MIN_MENU_OPTION, MAX_MENU_OPTION);
+            System.out.println(CP_CLIENT_MENU_OPTIONS);
+            int input = ConsoleRangeReader.readInt(CP_MIN_MENU_OPTION, CP_MAX_MENU_OPTION);
             switch (input) {
                 case 1:
                     printAllClients();
@@ -54,7 +46,7 @@ public class ClientPresenter {
     }
 
     public void addClient(){
-        System.out.println(CLIENT_NAME_INSERT);
+        System.out.println(CP_CLIENT_NAME_INSERT);
         String name = ConsoleReader.readString();
         Client client = new Client(name);
         clientService.addClient(client);
@@ -62,7 +54,7 @@ public class ClientPresenter {
 
     public void editClient(){
         printAllClients();
-        System.out.println(CLIENT_NAME_INSERT);
+        System.out.println(CP_CLIENT_NAME_INSERT);
         String nameToSearchFor = ConsoleReader.readString();
         Client clientToBeEdited = null;
         try {
@@ -71,13 +63,13 @@ public class ClientPresenter {
             System.out.println(e.getMessage());
             return;
         }
-        System.out.println(EDIT_NAME);
+        System.out.println(CP_EDIT_NAME);
         String newName = ConsoleReader.readString();
         clientService.editClient(clientToBeEdited.getName(), newName);
     }
 
     public void removeClient(){
-        System.out.println(DELETE_CLIENT);
+        System.out.println(CP_DELETE_CLIENT);
         printAllClients();
         String nameToSearchFor = ConsoleReader.readString();
         Client clientToBeDeleted = null;

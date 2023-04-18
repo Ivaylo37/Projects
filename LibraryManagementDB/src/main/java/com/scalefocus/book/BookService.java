@@ -2,28 +2,29 @@ package com.scalefocus.book;
 
 import com.scalefocus.author.Author;
 import com.scalefocus.author.AuthorService;
-import com.scalefocus.client.Client;
 import com.scalefocus.exception.BookNotDeletableException;
 import com.scalefocus.exception.InvalidAuthorException;
 import com.scalefocus.exception.InvalidBookException;
 import com.scalefocus.exception.InvalidDateException;
-import com.scalefocus.order.Order;
-import com.scalefocus.order.OrderService;
 import com.scalefocus.util.ConsoleReader;
 import com.scalefocus.util.DateFormatter;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.scalefocus.constants.GlobalConstants.BS_BOOK_AUTHOR_INSERT;
+
+@Service
 public class BookService {
-    private static final BookAccessor bookAccessor = new BookAccessor();
-    private static final BookMapper bookMapper = new BookMapper();
-    private static final OrderService orderService = new OrderService();
-    private static final AuthorService authorService = new AuthorService();
-    private static final String BOOK_AUTHOR_INSERT = "Enter the author's name :";
+    private final BookAccessor bookAccessor;
+    private final AuthorService authorService;
 
-
+    public BookService(BookAccessor bookAccessor, AuthorService authorService) {
+        this.bookAccessor = bookAccessor;
+        this.authorService = authorService;
+    }
 
     public List<Book> getAllBooks() {
         return bookAccessor.getAllBooks();
@@ -53,19 +54,6 @@ public class BookService {
         return foundBook;
     }
 
-    public List<Book> findBookByAuthor(String nameToLookFor) {
-        List<Book> books = getAllBooks();
-        List<Book> foundBooks = new ArrayList<>();
-        boolean found = false;
-        for (Book book : books) {
-            if (nameToLookFor.equalsIgnoreCase(book.getAuthor())) {
-                found = true;
-                foundBooks.add(book);
-            }
-        }
-        return foundBooks;
-    }
-
     public void removeBook(Book bookToDelete) {
         try {
             boolean existsInOrder = existingOrderForBook(bookToDelete);
@@ -77,16 +65,16 @@ public class BookService {
         bookAccessor.deleteBook(bookToDelete.getName());
     }
 
-    public boolean existingOrderForBook(Book book) throws BookNotDeletableException{
-        List<Order> orders = orderService.getAllOrders();
-        boolean orderFound = false;
-        for (Order order : orders){
-            if (order.getBook().getName().equalsIgnoreCase(book.getName())){
-                orderFound = true;
+    public boolean existingOrderForBook(Book bookToLookFor) throws BookNotDeletableException{
+        List<Book> books = bookAccessor.getAllBooksFromOrders();
+        boolean bookFound = false;
+        for (Book book : books){
+            if (book.getName().equalsIgnoreCase(bookToLookFor.getName())){
+                bookFound = true;
                 throw new BookNotDeletableException("There is an order including this book. Can not be deleted/edited");
             }
         }
-        return orderFound;
+        return bookFound;
     }
 
     public String validateDay(int day) {
@@ -141,7 +129,7 @@ public class BookService {
     }
 
     public String inputValidAuthor() throws InvalidAuthorException{
-        System.out.printf(BOOK_AUTHOR_INSERT);
+        System.out.printf(BS_BOOK_AUTHOR_INSERT);
         String authorName = ConsoleReader.readString();
         Author author;
         try {
@@ -154,5 +142,11 @@ public class BookService {
     }
     public int getBookID(Book book){
         return bookAccessor.getIDbyBook(book);
+    }
+    public void printAllAuthors(){
+        List<Author> authorList = authorService.getAllAuthors();
+        for (Author author : authorList) {
+            System.out.println(author);
+        }
     }
 }

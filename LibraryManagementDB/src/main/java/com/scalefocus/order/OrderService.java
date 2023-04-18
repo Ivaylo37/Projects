@@ -8,17 +8,22 @@ import com.scalefocus.exception.InvalidClientException;
 import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.exception.InvalidOrderException;
 import com.scalefocus.exception.NoOrdersFoundException;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class OrderService {
+    private final OrderAccessor orderAccessor;
+    private final ClientService clientService;
+    private final BookService bookService;
 
-    private static final OrderAccessor orderAccessor = new OrderAccessor();
-    private static final OrderMapper orderMapper = new OrderMapper();
-    private static final ClientService clientService = new ClientService();
-    private static final BookService bookService = new BookService();
+    public OrderService(OrderAccessor orderAccessor, ClientService clientService, BookService bookService) {
+        this.orderAccessor = orderAccessor;
+        this.clientService = clientService;
+        this.bookService = bookService;
+    }
 
     public List<Order> getAllOrders() {
         return orderAccessor.getAllOrders();
@@ -84,16 +89,6 @@ public class OrderService {
         for (Book book : books){
             System.out.println(book);
         }
-    }
-    public List<Order> findOrdersByClient(String name){
-        List<Order> matchedOrders = new ArrayList<>();
-        List<Order> allOrders = getAllOrders();
-        for (Order order : allOrders){
-            if (order.getClient().getName().equalsIgnoreCase(name)){
-                matchedOrders.add(order);
-            }
-        }
-        return matchedOrders;
     }
 
     public LocalDate insertDate() throws InvalidDateException{

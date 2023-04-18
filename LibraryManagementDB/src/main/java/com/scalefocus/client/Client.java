@@ -28,7 +28,6 @@ public class Client {
                 ", orders=" + orders +
                 '}';
     }
-
     void setOrders(List<Order> orders) {
         this.orders = orders;
     }

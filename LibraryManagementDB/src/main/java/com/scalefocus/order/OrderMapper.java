@@ -1,23 +1,26 @@
 package com.scalefocus.order;
 
-import com.scalefocus.author.Author;
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookAccessor;
 import com.scalefocus.client.Client;
 import com.scalefocus.client.ClientAccessor;
-import com.scalefocus.util.DateFormatter;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class OrderMapper {
 
-    private static final ClientAccessor clientAccessor = new ClientAccessor();
-    private static final BookAccessor bookAccessor = new BookAccessor();
+    private final ClientAccessor clientAccessor;
+    private final BookAccessor bookAccessor;
+
+    public OrderMapper(ClientAccessor clientAccessor, BookAccessor bookAccessor) {
+        this.clientAccessor = clientAccessor;
+        this.bookAccessor = bookAccessor;
+    }
 
     public List<Order> mapResultSetToOrder(ResultSet orderResultSet){
         List<Order> orderList = new ArrayList<>();
@@ -36,20 +39,15 @@ public class OrderMapper {
         return orderList;
     }
 
-    Order mapStringToOrder(String orderString) {
-        String[] tokens = orderString.split("_");
-        Client client = new Client(tokens[0]);
-        Book book = new Book(tokens[1]);
-        LocalDate from = DateFormatter.formatter(tokens[2]);
-        LocalDate to = DateFormatter.formatter(tokens[3]);
-        return new Order(client, book, from, to);
-    }
-
-    String mapOrderToString(Order order) {
-        String client = order.getClient().getName();
-        String book = order.getBook().getName();
-        String from = order.getFromDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        String to = order.getDueDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        return String.join("_", client, book, from, to + "\n");
+    public int mapResultSetToInt(ResultSet resultSet){
+        int id = 0;
+        try (resultSet){
+            while (resultSet.next()){
+                id = resultSet.getInt(1);
+            }
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
+        return id;
     }
 }

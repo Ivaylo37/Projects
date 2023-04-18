@@ -1,19 +1,18 @@
 package com.scalefocus.client;
 
-import com.scalefocus.author.Author;
 import com.scalefocus.exception.InvalidClientException;
-import com.scalefocus.exception.NoOrdersFoundException;
-import com.scalefocus.order.Order;
-import com.scalefocus.order.OrderService;
-
-import java.util.ArrayList;
+import org.springframework.stereotype.Service;
 import java.util.List;
-
+@Service
 public class ClientService {
 
-    private static final ClientAccessor clientAccessor = new ClientAccessor();
-    private static final ClientMapper clientMapper = new ClientMapper();
-    private static final OrderService orderService = new OrderService();
+    private final ClientAccessor clientAccessor;
+    private final ClientMapper clientMapper;
+
+    public ClientService(ClientAccessor clientAccessor, ClientMapper clientMapper) {
+        this.clientAccessor = clientAccessor;
+        this.clientMapper = clientMapper;
+    }
 
     public List<Client> getAllClients(){
         return clientAccessor.getAllClients();
@@ -57,16 +56,6 @@ public class ClientService {
             }
         }
         clientAccessor.deleteClient(clientToBeDeleted.getName());
-    }
-
-    public List<Order> findOrders(String name){
-        List foundOrders = new ArrayList<>();
-        try {
-            foundOrders = orderService.findAllOrdersByClient(name);
-        } catch (NoOrdersFoundException e) {
-            // no message because of the mapper
-        }
-        return foundOrders;
     }
 
     public void editClient(String oldName, String newName){

@@ -1,18 +1,13 @@
 package com.scalefocus.author;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class AuthorMapper {
-    private static final AuthorService authorService = new AuthorService();
-
-    Author mapStringToAuthor(String string) {
-        Author author = new Author(string);
-        author.setWrittenBooks(authorService.findAllBooks(author.getName()));
-        return author;
-    }
 
     String mapAuthorToString(Author author) {
         return author.getName();
