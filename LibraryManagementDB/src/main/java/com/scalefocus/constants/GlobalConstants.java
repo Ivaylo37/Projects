@@ -1,7 +1,5 @@
 package com.scalefocus.constants;
 
-import com.scalefocus.author.AuthorService;
-
 public class GlobalConstants {
 
     public static final int LMS_MIN_MENU_OPTION = 1;

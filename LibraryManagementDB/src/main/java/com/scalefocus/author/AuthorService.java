@@ -11,11 +11,9 @@ import java.util.List;
 public class AuthorService {
 
     private final AuthorAccessor authorAccessor ;
-    private final AuthorMapper authorMapper;
 
-    public AuthorService(AuthorAccessor authorAccessor, AuthorMapper authorMapper) {
+    public AuthorService(AuthorAccessor authorAccessor) {
         this.authorAccessor = authorAccessor;
-        this.authorMapper = authorMapper;
     }
 
     public List<Author> getAllAuthors() {
@@ -23,9 +21,7 @@ public class AuthorService {
     }
 
     public void addAuthor(String name) {
-        Author author = new Author(name);
-        String authorToString = authorMapper.mapAuthorToString(author);
-        authorAccessor.addAuthor(authorToString);
+        authorAccessor.addAuthor(name);
     }
 
     public Author findAuthorByName(String nameToLookFor) throws InvalidAuthorException {

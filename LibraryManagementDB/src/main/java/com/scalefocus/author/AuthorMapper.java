@@ -9,10 +9,6 @@ import java.util.List;
 @Component
 public class AuthorMapper {
 
-    String mapAuthorToString(Author author) {
-        return author.getName();
-    }
-
     public List<Author> mapResultSetToAuthors(ResultSet authorsResultSet){//add books
         List<Author> authorsList = new ArrayList<>();
         try (authorsResultSet){
@@ -25,17 +21,5 @@ public class AuthorMapper {
             throw new RuntimeException(e);
         }
         return authorsList;
-    }
-
-    public int mapResultSetToInt(ResultSet resultSet){
-        int id = 0;
-        try (resultSet){
-            while (resultSet.next()){
-                id = resultSet.getInt(1);
-            }
-        }catch (SQLException e){
-            throw new RuntimeException(e);
-        }
-        return id;
     }
 }
