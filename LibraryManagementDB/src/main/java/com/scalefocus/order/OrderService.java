@@ -8,11 +8,16 @@ import com.scalefocus.exception.InvalidClientException;
 import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.exception.InvalidOrderException;
 import com.scalefocus.exception.NoOrdersFoundException;
+import com.scalefocus.util.ConsoleRangeReader;
+import com.scalefocus.util.ConsoleReader;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.scalefocus.constants.GlobalConstants.*;
+import static com.scalefocus.constants.GlobalConstants.OP_MAX_FILTER_OPTION;
+
 @Service
 public class OrderService {
     private final OrderAccessor orderAccessor;
@@ -155,6 +160,102 @@ public class OrderService {
                 System.out.println(e.getMessage());
                 return;
             }
+        }
+    }
+
+    public void filterOrdersByClient(){
+        showAllClients();
+        System.out.println(OP_CLIENT_NAME_INSERT);
+        String name = ConsoleReader.readString();
+        List<Order> orders = null;
+        try {
+            orders = findAllOrdersByClient(name);
+        } catch (NoOrdersFoundException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        for (Order order : orders){
+            System.out.println(order);
+        }
+    }
+
+    public void filterOrdersByIssuedDate(){
+        System.out.println(OP_ON_BEFORE_AFTER_ISSUED);
+        int choiceIssuedDate = ConsoleRangeReader.readInt(OP_MIN_FILTER_OPTION, OP_MAX_FILTER_OPTION);
+        switch (choiceIssuedDate){
+            case 1:
+                LocalDate on = null;
+                try {
+                    on = insertDate();
+                }
+                catch (InvalidDateException e){
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                ordersOnDate(on);
+                break;
+            case 2:
+                LocalDate before = null;
+                try {
+                    before = insertDate();
+                }
+                catch (InvalidDateException e){
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                ordersBeforeDate(before);
+                break;
+            case 3:
+                LocalDate after = null;
+                try {
+                    after = insertDate();
+                }
+                catch (InvalidDateException e){
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                ordersAfterDate(after);
+                break;
+        }
+    }
+
+    public void filterOrdersByDueDate(){
+        System.out.println(OP_ON_BEFORE_AFTER_DUE);
+        int choiceDueDate = ConsoleRangeReader.readInt(OP_MIN_FILTER_OPTION, OP_MAX_FILTER_OPTION);
+        switch (choiceDueDate){
+            case 1:
+                LocalDate on = null;
+                try {
+                    on = insertDate();
+                }
+                catch (InvalidDateException e){
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                ordersOnDate(on);
+                break;
+            case 2:
+                LocalDate before = null;
+                try {
+                    before = insertDate();
+                }
+                catch (InvalidDateException e){
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                ordersBeforeDate(before);
+                break;
+            case 3:
+                LocalDate after = null;
+                try {
+                    after = insertDate();
+                }
+                catch (InvalidDateException e){
+                    System.out.println(e.getMessage());
+                    return;
+                }
+                ordersAfterDate(after);
+                break;
         }
     }
 }

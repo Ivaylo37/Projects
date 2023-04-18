@@ -9,10 +9,10 @@ import com.scalefocus.util.ConsoleReader;
 import com.scalefocus.util.DateFormatter;
 import org.springframework.stereotype.Component;
 import static com.scalefocus.constants.GlobalConstants.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
 @Component
 public class OrderPresenter {
 
@@ -30,128 +30,36 @@ public class OrderPresenter {
             System.out.println(OP_OPTIONS);
             int choice = ConsoleRangeReader.readInt(OP_MIN_MENU_OPTION, OP_MAX_MENU_OPTION);
             switch (choice) {
-                case 1:
-                    printAllOrders();
-                    break;
-                case 2:
-                    filterOrders();
-                    break;
-                case 3:
-                    addOrder();
-                    break;
-                case 4:
-                    editOrder();
-                    break;
-                case 5:
-                    removeOrder();
-                    break;
-                case 6:
-                    return;
+                case 1 -> printAllOrders();
+                case 2 -> filterOrders();
+                case 3 -> addOrder();
+                case 4 -> editOrder();
+                case 5 -> removeOrder();
+                case 6 -> {return;
+                }
             }
         }
     }
+
     public void printAllOrders() {
         List<Order> orderList = orderService.getAllOrders();
         for (Order order : orderList) {
             System.out.println(order);
         }
     }
+
     public void filterOrders(){
         System.out.println(OP_FILTER_ORDERS_OPTIONS);
         int choice = ConsoleRangeReader.readInt(OP_MIN_FILTER_OPTION, OP_MAX_FILTER_OPTION);
         switch (choice){
             case 1:
-                orderService.showAllClients();
-                System.out.println(OP_CLIENT_NAME_INSERT);
-                String name = ConsoleReader.readString();
-                List<Order> orders = null;
-                try {
-                    orders = orderService.findAllOrdersByClient(name);
-                } catch (NoOrdersFoundException e) {
-                    System.out.println(e.getMessage());
-                    return;
-                }
-                for (Order order : orders){
-                    System.out.println(order);
-                }
+                orderService.filterOrdersByClient();
                 break;
             case 2:
-                System.out.println(OP_ON_BEFORE_AFTER_ISSUED);
-                int choiceIssuedDate = ConsoleRangeReader.readInt(OP_MIN_FILTER_OPTION, OP_MAX_FILTER_OPTION);
-                switch (choiceIssuedDate){
-                    case 1:
-                        LocalDate on = null;
-                        try {
-                            on = orderService.insertDate();
-                        }
-                        catch (InvalidDateException e){
-                            System.out.println(e.getMessage());
-                            return;
-                        }
-                        orderService.ordersOnDate(on);
-                        break;
-                    case 2:
-                        LocalDate before = null;
-                        try {
-                            before = orderService.insertDate();
-                        }
-                        catch (InvalidDateException e){
-                            System.out.println(e.getMessage());
-                            return;
-                        }
-                        orderService.ordersBeforeDate(before);
-                        break;
-                    case 3:
-                        LocalDate after = null;
-                        try {
-                            after = orderService.insertDate();
-                        }
-                        catch (InvalidDateException e){
-                            System.out.println(e.getMessage());
-                            return;
-                        }
-                        orderService.ordersAfterDate(after);
-                        break;
-                }
+                orderService.filterOrdersByIssuedDate();
                 break;
             case 3:
-                System.out.println(OP_ON_BEFORE_AFTER_DUE);
-                int choiceDueDate = ConsoleRangeReader.readInt(OP_MIN_FILTER_OPTION, OP_MAX_FILTER_OPTION);
-                switch (choiceDueDate){
-                    case 1:
-                        LocalDate on = null;
-                        try {
-                            on = orderService.insertDate();
-                        }
-                        catch (InvalidDateException e){
-                            System.out.println(e.getMessage());
-                            return;
-                        }
-                        orderService.ordersOnDate(on);
-                        break;
-                    case 2:
-                        LocalDate before = null;
-                        try {
-                            before = orderService.insertDate();
-                        }
-                        catch (InvalidDateException e){
-                            System.out.println(e.getMessage());
-                            return;
-                        }
-                        orderService.ordersBeforeDate(before);
-                        break;
-                    case 3:
-                        LocalDate after = null;
-                        try {
-                            after = orderService.insertDate();
-                        }
-                        catch (InvalidDateException e){
-                            System.out.println(e.getMessage());
-                            return;
-                        }
-                        orderService.ordersAfterDate(after);
-                        break;
-                }
+                orderService.filterOrdersByDueDate();
                 break;
         }
     }
@@ -259,5 +167,4 @@ public class OrderPresenter {
         }
         orderService.deleteOrder(orderToBeDeleted);
     }
-
 }
