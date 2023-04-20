@@ -1,7 +1,7 @@
 package com.scalefocus.book;
 
 import com.scalefocus.author.Author;
-import com.scalefocus.db.JdbcDriver;
+import com.scalefocus.util.db.DBConnector;
 import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.List;
@@ -17,7 +17,8 @@ public class BookAccessor {
     public List<Book> getAllBooks() {
         ResultSet resultSet;
         List<Book> books;
-        try (Connection connection = JdbcDriver.getConnection(); Statement statement = connection.createStatement();){
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (Statement statement = connection.createStatement();){
             resultSet = statement.executeQuery("SELECT * FROM library_management.books");
             books = bookMapper.mapResultSetToBook(resultSet);
         }catch (SQLException e){
@@ -28,7 +29,8 @@ public class BookAccessor {
 
     public void addBook(Book book) {
         Author author = new Author(book.getAuthor());
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement("INSERT INTO library_management.books(book_name, book_author, date_of_creation) VALUES(?, ?, ?);")){
             preparedStatement.setString(1, book.getName());
             preparedStatement.setInt(2, getIDbyAuthor(author));
@@ -41,7 +43,8 @@ public class BookAccessor {
 
     public void deleteBook(String toBeDeleted) {
         String sql = "DELETE FROM library_management.books WHERE book_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, toBeDeleted);
             preparedStatement.execute();
@@ -54,7 +57,8 @@ public class BookAccessor {
         ResultSet resultSet;
         Book book;
         String sql = "SELECT * FROM library_management.books WHERE book_id = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
@@ -70,7 +74,8 @@ public class BookAccessor {
         int id;
         ResultSet resultSet;
         String sql = "SELECT book_id FROM library_management.books WHERE book_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, book.getName());
             resultSet = preparedStatement.executeQuery();
@@ -84,7 +89,8 @@ public class BookAccessor {
         int id;
         ResultSet resultSet;
         String sql = "SELECT author_id FROM library_management.authors WHERE author_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, author.getName());
             resultSet = preparedStatement.executeQuery();
@@ -97,7 +103,8 @@ public class BookAccessor {
     public List<Book> getAllBooksFromOrders() {
         ResultSet resultSet;
         List<Book> books;
-        try (Connection connection = JdbcDriver.getConnection(); Statement statement = connection.createStatement();){
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (Statement statement = connection.createStatement();){
             resultSet = statement.executeQuery("SELECT order_book FROM library_management.orders");
             books = bookMapper.mapResultSetToBookByNames(resultSet);
         }catch (SQLException e){

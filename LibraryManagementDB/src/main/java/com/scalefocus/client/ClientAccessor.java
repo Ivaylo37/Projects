@@ -1,6 +1,6 @@
 package com.scalefocus.client;
 
-import com.scalefocus.db.JdbcDriver;
+import com.scalefocus.util.db.DBConnector;
 import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.List;
@@ -16,7 +16,8 @@ public class ClientAccessor {
     public List<Client> getAllClients() {
         ResultSet resultSet;
         List<Client> clients;
-        try (Connection connection = JdbcDriver.getConnection(); Statement statement = connection.createStatement();){
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (Statement statement = connection.createStatement();){
             resultSet = statement.executeQuery("SELECT * FROM library_management.clients");
             clients = clientMapper.mapResultSetToClients(resultSet);
         }catch (SQLException e){
@@ -27,7 +28,8 @@ public class ClientAccessor {
 
     public void addClient(String clientName) {
         String sql = "";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement("INSERT INTO library_management.clients(client_name) VALUES(?);")){
             preparedStatement.setString(1, clientName);
             preparedStatement.executeUpdate();
@@ -38,7 +40,8 @@ public class ClientAccessor {
 
     public void deleteClient(String toBeDeleted) {
         String sql = "DELETE FROM library_management.clients WHERE client_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, toBeDeleted);
             preparedStatement.execute();
@@ -49,7 +52,8 @@ public class ClientAccessor {
 
     public void editClient(String toBeEdited, String newName) {
         String sql = "UPDATE library_management.clients SET client_name = ? WHERE client_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, newName);
             preparedStatement.setString(2, toBeEdited);
@@ -63,7 +67,8 @@ public class ClientAccessor {
         ResultSet resultSet;
         Client client;
         String sql = "SELECT * FROM library_management.clients WHERE client_id = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setInt(1, id);
             resultSet = preparedStatement.executeQuery();
@@ -79,7 +84,8 @@ public class ClientAccessor {
         int id;
         ResultSet resultSet;
         String sql = "SELECT client_id FROM library_management.clients WHERE client_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, client.getName());
             resultSet = preparedStatement.executeQuery();

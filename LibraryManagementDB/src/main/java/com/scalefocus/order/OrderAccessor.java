@@ -3,7 +3,7 @@ package com.scalefocus.order;
 import com.scalefocus.book.Book;
 import com.scalefocus.client.Client;
 import com.scalefocus.client.ClientService;
-import com.scalefocus.db.JdbcDriver;
+import com.scalefocus.util.db.DBConnector;
 import org.springframework.stereotype.Component;
 import java.sql.*;
 import java.util.List;
@@ -21,8 +21,10 @@ public class OrderAccessor {
     public List<Order> getAllOrders() {
         ResultSet resultSet;
         List<Order> orders;
-        try (Connection connection = JdbcDriver.getConnection(); Statement statement = connection.createStatement();){
-            resultSet = statement.executeQuery("SELECT * FROM library_management.orders");
+        String sql = "SELECT * FROM library_management.orders";
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (Statement statement = connection.createStatement();){
+            resultSet = statement.executeQuery(sql);
             orders = orderMapper.mapResultSetToOrder(resultSet);
         }catch (SQLException e){
             throw new RuntimeException(e);
@@ -33,8 +35,10 @@ public class OrderAccessor {
     public void addOrder(Order order) {
         Client client = order.getClient();
         Book book = order.getBook();
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
-                connection.prepareStatement("INSERT INTO library_management.orders(order_client, order_book, from_date, due_date) VALUES(?, ?, ?, ?);")){
+        String sql = "INSERT INTO library_management.orders(order_client, order_book, from_date, due_date) VALUES(?, ?, ?, ?);";
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
+                connection.prepareStatement(sql)){
             preparedStatement.setInt(1, clientService.getClientID(client));
             preparedStatement.setInt(2, getIDbyBook(book));
             preparedStatement.setDate(3, Date.valueOf(order.getFromDate()));
@@ -47,7 +51,8 @@ public class OrderAccessor {
 
     public void deleteOrder(int client, int book) {
         String sql = "DELETE FROM library_management.orders WHERE order_client = ? AND order_book = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try ( PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setInt(1, client);
             preparedStatement.setInt(2, book);
@@ -60,7 +65,8 @@ public class OrderAccessor {
         int id;
         ResultSet resultSet;
         String sql = "SELECT book_id FROM library_management.books WHERE book_name = ?";
-        try (Connection connection = JdbcDriver.getConnection(); PreparedStatement preparedStatement =
+        Connection connection = DBConnector.getInstance().getConnection();
+        try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, book.getName());
             resultSet = preparedStatement.executeQuery();

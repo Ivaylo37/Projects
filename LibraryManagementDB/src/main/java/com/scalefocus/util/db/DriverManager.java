@@ -1,4 +1,4 @@
-package com.scalefocus.db;
+package com.scalefocus.util.db;
 
 import java.lang.invoke.MethodHandles;
 import java.sql.SQLException;
