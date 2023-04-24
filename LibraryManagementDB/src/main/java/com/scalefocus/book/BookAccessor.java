@@ -8,7 +8,7 @@ import java.util.List;
 
 @Component
 public class BookAccessor {
-    private final BookMapper bookMapper;
+    private final BookMapper bookMapper;//iMapper
 
     public BookAccessor(BookMapper bookMapper) {
         this.bookMapper = bookMapper;
