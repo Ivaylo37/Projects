@@ -55,7 +55,7 @@ public class AuthorService {
         }
         authorAccessor.deleteAuthor(authorToRemove.getName());
     }
-    public void editAuthor(String oldName, String newName){
-        authorAccessor.editAuthor(oldName, newName);
+    public Author editAuthor(String oldName, String newName){
+        return authorAccessor.editAuthor(oldName, newName);
     }
 }

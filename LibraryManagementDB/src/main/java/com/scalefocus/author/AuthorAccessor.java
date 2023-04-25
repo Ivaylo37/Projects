@@ -51,9 +51,10 @@ public class AuthorAccessor {
         }
     }
 
-    public void editAuthor(String toBeEdited, String newName) {
+    public Author editAuthor(String toBeEdited, String newName) {
         String sql = "UPDATE library_management.authors SET author_name = ? WHERE author_name = ?";
         Connection connection = DBConnector.getInstance().getConnection();
+        Author author = new Author(newName);
         try (PreparedStatement preparedStatement =
                 connection.prepareStatement(sql)){
             preparedStatement.setString(1, newName);
@@ -62,6 +63,7 @@ public class AuthorAccessor {
         }catch (SQLException e){
             throw new RuntimeException(e);
         }
+        return author;
     }
 
     public Author getAuthorByID(int id){
