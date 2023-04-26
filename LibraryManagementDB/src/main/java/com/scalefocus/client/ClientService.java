@@ -1,7 +1,8 @@
 package com.scalefocus.client;
 
-import com.scalefocus.exception.InvalidClientException;
 import org.springframework.stereotype.Service;
+import com.scalefocus.exception.InvalidClientException;
+
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ public class ClientService {
         clientAccessor.addClient(client.getName());
     }
 
-    public Client searchForClient(String nameToSearchFor) throws InvalidClientException{
+    public Client searchForClient(String nameToSearchFor) throws InvalidClientException {
         List<Client> clients = getAllClients();
         Client foundCLient = null;
         for(Client client : clients){

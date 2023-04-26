@@ -1,8 +1,8 @@
 package com.scalefocus.author;
 
-import com.scalefocus.requests.AuthorRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.scalefocus.requests.AuthorRequest;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class AuthorController {
     }
     @PutMapping("/authors/{id}")
     public ResponseEntity<Author> updateAuthorWithResponse(
-            @RequestBody AuthorRequest authorRequest,@PathVariable int id){
+            @RequestBody AuthorRequest authorRequest, @PathVariable int id){
         Author oldAuthor = authorAccessor.getAuthorByID(id);
         Author author = authorService.editAuthor(oldAuthor.getName(), authorRequest.getName());
         return ResponseEntity.ok(author);

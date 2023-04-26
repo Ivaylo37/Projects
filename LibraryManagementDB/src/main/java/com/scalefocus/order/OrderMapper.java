@@ -1,10 +1,11 @@
 package com.scalefocus.order;
 
+import org.springframework.stereotype.Component;
 import com.scalefocus.book.Book;
 import com.scalefocus.book.BookAccessor;
 import com.scalefocus.client.Client;
 import com.scalefocus.client.ClientAccessor;
-import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;

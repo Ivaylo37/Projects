@@ -1,14 +1,16 @@
 package com.scalefocus.book;
 
+import com.scalefocus.util.ConsoleReader;
+import org.springframework.stereotype.Component;
 import com.scalefocus.exception.InvalidAuthorException;
 import com.scalefocus.exception.InvalidBookException;
 import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.util.ConsoleRangeReader;
-import com.scalefocus.util.ConsoleReader;
-import org.springframework.stereotype.Component;
+
 import java.time.LocalDate;
 import java.util.List;
-import static com.scalefocus.constants.GlobalConstants.*;
+
+import static com.scalefocusOld.constants.GlobalConstants.*;
 
 @Component
 public class BookPresenter {

@@ -1,10 +1,11 @@
 package com.scalefocus.order;
 
 import com.scalefocus.book.Book;
-import com.scalefocus.client.Client;
 import com.scalefocus.client.ClientService;
 import com.scalefocus.util.db.DBConnector;
 import org.springframework.stereotype.Component;
+import com.scalefocus.client.Client;
+
 import java.sql.*;
 import java.util.List;
 

@@ -1,22 +1,22 @@
 package com.scalefocus.order;
 
 import com.scalefocus.book.Book;
+import com.scalefocus.client.ClientService;
+import com.scalefocus.util.ConsoleReader;
+import org.springframework.stereotype.Service;
 import com.scalefocus.book.BookService;
 import com.scalefocus.client.Client;
-import com.scalefocus.client.ClientService;
 import com.scalefocus.exception.InvalidClientException;
 import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.exception.InvalidOrderException;
 import com.scalefocus.exception.NoOrdersFoundException;
 import com.scalefocus.util.ConsoleRangeReader;
-import com.scalefocus.util.ConsoleReader;
-import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.scalefocus.constants.GlobalConstants.*;
-import static com.scalefocus.constants.GlobalConstants.OP_MAX_FILTER_OPTION;
+import static com.scalefocusOld.constants.GlobalConstants.*;
 
 @Service
 public class OrderService {
@@ -38,7 +38,7 @@ public class OrderService {
         orderAccessor.addOrder(order);
     }
 
-    public Order findOrderByClientAndBook(String nameToLookFor, String bookToLookFor) throws InvalidOrderException{
+    public Order findOrderByClientAndBook(String nameToLookFor, String bookToLookFor) throws InvalidOrderException {
         List<Order> orders = getAllOrders();
         Order foundOrder = null;
         for (Order order : orders) {
@@ -53,7 +53,7 @@ public class OrderService {
         return foundOrder;
     }
 
-    public List<Order> findAllOrdersByClient(String nameToLookFor) throws NoOrdersFoundException{
+    public List<Order> findAllOrdersByClient(String nameToLookFor) throws NoOrdersFoundException {
         List<Order> orders = getAllOrders();
         List<Order> foundOrders = new ArrayList<>();
         for (Order order : orders) {
@@ -67,7 +67,7 @@ public class OrderService {
         return foundOrders;
     }
 
-    public Client findExistingClient(String name) throws InvalidClientException{
+    public Client findExistingClient(String name) throws InvalidClientException {
         Client client = null;
         try {
             client = clientService.searchForClient(name);
@@ -96,7 +96,7 @@ public class OrderService {
         }
     }
 
-    public LocalDate insertDate() throws InvalidDateException{
+    public LocalDate insertDate() throws InvalidDateException {
         LocalDate date = null;
         try {
             date = bookService.insertDate();

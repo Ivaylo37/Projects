@@ -1,8 +1,9 @@
 package com.scalefocus.book;
 
-import com.scalefocus.author.Author;
 import com.scalefocus.util.db.DBConnector;
 import org.springframework.stereotype.Component;
+import com.scalefocus.author.Author;
+
 import java.sql.*;
 import java.util.List;
 

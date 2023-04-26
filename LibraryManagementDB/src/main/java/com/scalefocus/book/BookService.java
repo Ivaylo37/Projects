@@ -9,9 +9,11 @@ import com.scalefocus.exception.InvalidDateException;
 import com.scalefocus.util.ConsoleReader;
 import com.scalefocus.util.DateFormatter;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.List;
-import static com.scalefocus.constants.GlobalConstants.BS_BOOK_AUTHOR_INSERT;
+
+import static com.scalefocusOld.constants.GlobalConstants.BS_BOOK_AUTHOR_INSERT;
 
 @Service
 public class BookService {
@@ -36,7 +38,7 @@ public class BookService {
         bookAccessor.addBook(book);
     }
 
-    public Book findBookByName(String nameToLookFor) throws InvalidBookException{
+    public Book findBookByName(String nameToLookFor) throws InvalidBookException {
         List<Book> books = getAllBooks();
         Book foundBook = null;
         for (Book book : books) {
@@ -62,7 +64,7 @@ public class BookService {
         bookAccessor.deleteBook(bookToDelete.getName());
     }
 
-    public boolean existingOrderForBook(Book bookToLookFor) throws BookNotDeletableException{
+    public boolean existingOrderForBook(Book bookToLookFor) throws BookNotDeletableException {
         List<Book> books = bookAccessor.getAllBooksFromOrders();
         boolean bookFound = false;
         for (Book book : books){
@@ -125,7 +127,7 @@ public class BookService {
         return DateFormatter.formatter(date);
     }
 
-    public String inputValidAuthor() throws InvalidAuthorException{
+    public String inputValidAuthor() throws InvalidAuthorException {
         System.out.printf(BS_BOOK_AUTHOR_INSERT);
         String authorName = ConsoleReader.readString();
         Author author;

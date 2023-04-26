@@ -1,8 +1,9 @@
 package com.scalefocus.book;
 
+import org.springframework.stereotype.Component;
 import com.scalefocus.author.Author;
 import com.scalefocus.author.AuthorAccessor;
-import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;

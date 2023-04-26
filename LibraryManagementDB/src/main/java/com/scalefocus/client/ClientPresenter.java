@@ -1,11 +1,13 @@
 package com.scalefocus.client;
 
-import com.scalefocus.exception.InvalidClientException;
-import com.scalefocus.util.ConsoleRangeReader;
 import com.scalefocus.util.ConsoleReader;
 import org.springframework.stereotype.Component;
-import static com.scalefocus.constants.GlobalConstants.*;
+import com.scalefocus.exception.InvalidClientException;
+import com.scalefocus.util.ConsoleRangeReader;
+
 import java.util.List;
+
+import static com.scalefocusOld.constants.GlobalConstants.*;
 
 @Component
 public class ClientPresenter {

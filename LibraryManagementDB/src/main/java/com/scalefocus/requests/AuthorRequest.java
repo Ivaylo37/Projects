@@ -1,7 +1,6 @@
 package com.scalefocus.requests;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import org.springframework.stereotype.Component;
 
 public class AuthorRequest {
 

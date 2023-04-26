@@ -2,6 +2,7 @@ package com.scalefocus.order;
 
 import com.scalefocus.book.Book;
 import com.scalefocus.client.Client;
+
 import java.time.LocalDate;
 
 public class Order {

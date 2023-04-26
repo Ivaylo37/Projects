@@ -2,6 +2,7 @@ package com.scalefocus.client;
 
 import com.scalefocus.util.db.DBConnector;
 import org.springframework.stereotype.Component;
+
 import java.sql.*;
 import java.util.List;
 
