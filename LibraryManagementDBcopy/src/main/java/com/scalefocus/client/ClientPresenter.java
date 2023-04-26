@@ -7,7 +7,7 @@ import com.scalefocus.util.ConsoleRangeReader;
 
 import java.util.List;
 
-import static com.scalefocusOld.constants.GlobalConstants.*;
+import static com.scalefocus.constants.GlobalConstants.*;
 
 @Component
 public class ClientPresenter {

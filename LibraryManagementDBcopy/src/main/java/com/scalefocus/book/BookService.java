@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.scalefocusOld.constants.GlobalConstants.BS_BOOK_AUTHOR_INSERT;
+import static com.scalefocus.constants.GlobalConstants.BS_BOOK_AUTHOR_INSERT;
 
 @Service
 public class BookService {

@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static com.scalefocusOld.constants.GlobalConstants.*;
+import static com.scalefocus.constants.GlobalConstants.*;
 
 @Component
 public class OrderPresenter {

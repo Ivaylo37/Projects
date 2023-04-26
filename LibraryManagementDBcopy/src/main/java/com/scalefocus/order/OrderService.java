@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.scalefocusOld.constants.GlobalConstants.*;
+import static com.scalefocus.constants.GlobalConstants.*;
 
 @Service
 public class OrderService {
