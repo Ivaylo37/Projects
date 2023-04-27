@@ -9,7 +9,7 @@ public class DBConnector extends DriverManager{
     public static final String DATABASE_URL = "jdbc:postgresql://localhost:5432/postgres";
     public static final String DATABASE_USER = "postgres";
     public static final String DATABASE_PASSWORD = "Ivcata99";
-    Connection connection;
+    private static Connection connection;
 
     private DBConnector(){
         if (connection == null){
@@ -21,7 +21,7 @@ public class DBConnector extends DriverManager{
             }
         }
     }
-    public Connection getConnection() {
+    public static Connection getConnection() {
         return connection;
     }
 }
