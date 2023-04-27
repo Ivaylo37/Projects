@@ -1,8 +1,7 @@
 package org.scalefocus.user;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,5 +18,11 @@ public class UserController {
     public ResponseEntity<List<User>> printAllUsers(){
         List<User> userList = userService.getAllUsers();
         return ResponseEntity.ok(userList);
+    }
+    @PostMapping("/users")
+    public ResponseEntity<Void> addUser(@RequestBody UserRequest userRequest) {
+        userService.addUser(userRequest.getUsername(), userRequest.getEmail(),
+                userRequest.getPhone(), userRequest.getCity());
+        return ResponseEntity.status(201).build();
     }
 }
