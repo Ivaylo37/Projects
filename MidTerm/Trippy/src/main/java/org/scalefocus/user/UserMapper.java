@@ -1,11 +1,13 @@
 package org.scalefocus.user;
 
+import org.springframework.stereotype.Component;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+@Component
 public class UserMapper {
 
     public List<User> mapResultSetToUsers(ResultSet usersResultSet){

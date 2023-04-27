@@ -22,6 +22,7 @@ public class DBConnector extends DriverManager{
         }
     }
     public static Connection getConnection() {
+        DBConnector dbConnector = new DBConnector();
         return connection;
     }
 }
