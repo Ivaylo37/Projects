@@ -22,25 +22,13 @@ public class UserService {
         return userAccessor.getAllUsers();
     }
 
-    public User addUser(String username, String email, String phone,  String city){
+    public User addUser(String username, String email, String phone,  String city) throws InvalidUsernameException, InvalidEmailException, InvalidPhoneNumberFormatException {
         String validatedUsername = null;
-        try {
-            validatedUsername = validateUsername(username);
-        } catch (InvalidUsernameException e) {
-            throw new RuntimeException(e);
-        }
+        validatedUsername = validateUsername(username);
         String validatedEmail = null;
-        try {
-            validatedEmail = validateEmail(email);
-        } catch (InvalidEmailException e) {
-            throw new RuntimeException(e);
-        }
+        validatedEmail = validateEmail(email);
         String validatedPhone = null;
-        try {
-            validatedPhone = validatePhoneNumber(phone);
-        } catch (InvalidPhoneNumberFormatException e) {
-            throw new RuntimeException(e);
-        }
+        validatedPhone = validatePhoneNumber(phone);
         String validatedCity = null;
         try {
             validatedCity = validateCity(city);
