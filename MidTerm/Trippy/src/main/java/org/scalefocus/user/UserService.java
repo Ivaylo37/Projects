@@ -53,11 +53,15 @@ public class UserService {
     }
 
     public User findUserByEmail(String email) throws UserNotFoundException {
-        try {
             return userAccessor.findUserByEmail(email);
-        } catch (UserNotFoundException e) {
-            throw new UserNotFoundException(e.getMessage());
-        }
+    }
+
+    public User findUserByUsername(String username) throws UserNotFoundException {
+            return userAccessor.findUserByUsername(username);
+    }
+
+    public User findUserById(int id) throws UserNotFoundException {
+        return userAccessor.findUserById(id);
     }
 
     private String validateEmail(String email) throws InvalidEmailException{

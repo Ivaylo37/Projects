@@ -65,4 +65,40 @@ public class UserAccessor {
         }
         return user;
     }
+
+    public User findUserByUsername(String username) throws UserNotFoundException{
+        User user;
+        String sql = "SELECT * FROM trippy.users WHERE username = ?";
+        try (Connection connection = DBConnector.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<User> users = userMapper.mapResultSetToUsers(resultSet);
+            if (users.size() == 0){
+                throw new UserNotFoundException("User with this username not found.");
+            }
+            user = users.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
+
+    public User findUserById(int id) throws UserNotFoundException {
+        User user;
+        String sql = "SELECT * FROM trippy.users WHERE user_id = ?";
+        try (Connection connection = DBConnector.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        List<User> users = userMapper.mapResultSetToUsers(resultSet);
+        if (users.size() == 0){
+            throw new UserNotFoundException("User with this id not found.");
+        }
+        user = users.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
 }
