@@ -1,13 +1,11 @@
 package org.scalefocus.user;
 
-import org.scalefocus.customExceptions.InvalidCityException;
-import org.scalefocus.customExceptions.InvalidEmailException;
-import org.scalefocus.customExceptions.InvalidPhoneNumberFormatException;
-import org.scalefocus.customExceptions.InvalidUsernameException;
+import org.scalefocus.customExceptions.*;
 import org.springframework.stereotype.Component;
 
 import java.util.InvalidPropertiesFormatException;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,8 +52,12 @@ public class UserService {
         return user;
     }
 
-    public User findUserByEmail(String email){
-        return userAccessor.findUserByEmail(email);
+    public User findUserByEmail(String email) throws UserNotFoundException {
+        try {
+            return userAccessor.findUserByEmail(email);
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException(e.getMessage());
+        }
     }
 
     private String validateEmail(String email) throws InvalidEmailException{

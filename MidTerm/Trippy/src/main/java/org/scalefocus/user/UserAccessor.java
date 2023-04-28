@@ -1,6 +1,7 @@
 package org.scalefocus.user;
 
 import com.sun.source.tree.TryTree;
+import org.scalefocus.customExceptions.UserNotFoundException;
 import org.scalefocus.util.db.DBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -47,7 +48,7 @@ public class UserAccessor {
         return user;
     }
 
-    public User findUserByEmail(String email){
+    public User findUserByEmail(String email) throws UserNotFoundException{
         User user;
         String sql = "SELECT * FROM trippy.users WHERE email = ?";
         try(Connection connection = DBConnector.getConnection();
@@ -56,7 +57,7 @@ public class UserAccessor {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = userMapper.mapResultSetToUsers(resultSet);
             if (users.size() == 0){
-                //exception
+                throw new UserNotFoundException("User with this email not found.");
             }
             user = users.get(0);
         } catch (SQLException e) {

@@ -1,5 +1,7 @@
 package org.scalefocus.user;
 
+import org.scalefocus.customExceptions.UserNotFoundException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +22,13 @@ public class UserController {
         return ResponseEntity.ok(userList);
     }
     @GetMapping("/users/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email){
-        User user = userService.findUserByEmail(email);
+    public ResponseEntity getUserByEmail(@PathVariable String email){
+        User user = null;
+        try {
+            user = userService.findUserByEmail(email);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
         return ResponseEntity.ok(user);
     }
 
