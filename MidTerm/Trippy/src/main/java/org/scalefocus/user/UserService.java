@@ -54,6 +54,10 @@ public class UserService {
         return user;
     }
 
+    public User findUserByEmail(String email){
+        return userAccessor.findUserByEmail(email);
+    }
+
     private String validateEmail(String email) throws InvalidEmailException{
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);

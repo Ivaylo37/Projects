@@ -46,4 +46,22 @@ public class UserAccessor {
         }
         return user;
     }
+
+    public User findUserByEmail(String email){
+        User user;
+        String sql = "SELECT * FROM trippy.users WHERE email = ?";
+        try(Connection connection = DBConnector.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            List<User> users = userMapper.mapResultSetToUsers(resultSet);
+            if (users.size() == 0){
+                //exception
+            }
+            user = users.get(0);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return user;
+    }
 }
