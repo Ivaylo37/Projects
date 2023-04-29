@@ -1,6 +1,7 @@
 package org.scalefocus.business;
 
 import org.scalefocus.customExceptions.BusinessNotFoundException;
+import org.scalefocus.user.UserRequest;
 import org.scalefocus.util.db.DBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -69,7 +70,8 @@ public class BusinessAccessor {
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setInt(1, rating);
-            preparedStatement.setInt(2, rating+1);
+            int ratingPlusOne = rating + 10;
+            preparedStatement.setInt(2, ratingPlusOne);
             ResultSet resultSet = preparedStatement.executeQuery();
             businessDtos = businessMapper.mapResultSetToBusinessesDtos(resultSet);
             if (businessDtos.size() == 0){
@@ -79,5 +81,20 @@ public class BusinessAccessor {
             throw new RuntimeException(e);
         }
         return businessDtos;
+    }
+
+    public BusinessRequest addBusiness(BusinessRequest businessRequest){
+        String sql = "INSERT INTO trippy.businesses(type, email, phone, city) VALUES (?, ?, ?, ?);";
+        try(Connection connection = DBConnector.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, businessRequest.getType());
+            preparedStatement.setString(2, businessRequest.getEmail());
+            preparedStatement.setString(3, businessRequest.getPhone());
+            preparedStatement.setString(4, businessRequest.getCity());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return businessRequest;
     }
 }

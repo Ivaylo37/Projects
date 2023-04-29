@@ -1,11 +1,9 @@
 package org.scalefocus.business;
 
-import org.scalefocus.customExceptions.BusinessNotFoundException;
+import org.scalefocus.customExceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,7 +19,7 @@ public class BusinessController {
     @GetMapping("/businesses")
     public ResponseEntity printAllBusinesses(@RequestParam(required = false) String type,
                                              @RequestParam(required = false) String city,
-                                             @RequestParam(required = false) int rating)
+                                             @RequestParam(required = false) Integer rating)
     {
         List<BusinessDto> businessDtos;
         if (type != null){
@@ -40,7 +38,7 @@ public class BusinessController {
             }
             return ResponseEntity.ok(businessDtos);
         }
-        if (rating > 0){
+        if (rating != null){
             try {
                 businessDtos = businessService.getBusinessesByRating(rating);
             } catch (BusinessNotFoundException e) {
@@ -50,5 +48,17 @@ public class BusinessController {
         }
         businessDtos = businessService.getAllBusinesses();
         return ResponseEntity.ok(businessDtos);
+    }
+
+    @PostMapping("/businesses")
+    public ResponseEntity addBusiness(@RequestBody BusinessRequest businessRequest){
+        try {
+            businessService.addBusiness(businessRequest);
+        } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |
+                 InvalidEmailException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.status(201).build();
+
     }
 }

@@ -1,8 +1,10 @@
 package org.scalefocus.business;
 
+import com.fasterxml.jackson.datatype.jsr310.DecimalUtils;
 import org.scalefocus.user.User;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -18,7 +20,8 @@ public class BusinessMapper {
             while (businessResultSet.next()){
                 int id = businessResultSet.getInt(1);
                 String type = businessResultSet.getString(2);
-                double rating = businessResultSet.getDouble(3);
+                //double rating = businessResultSet.getDouble(3);
+                int rating = businessResultSet.getInt(3);
                 int reviewsCount = businessResultSet.getInt(4);
                 String email = businessResultSet.getString(5);
                 String phone = businessResultSet.getString(6);
