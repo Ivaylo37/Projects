@@ -62,4 +62,22 @@ public class BusinessAccessor {
         }
         return businessDtos;
     }
+
+    public List<BusinessDto> getBusinessByRating(int rating) throws BusinessNotFoundException {
+        List<BusinessDto> businessDtos;
+        String sql = "SELECT * FROM trippy.businesses WHERE rating BETWEEN ? and ?";
+        try(Connection connection = DBConnector.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+            preparedStatement.setInt(1, rating);
+            preparedStatement.setInt(2, rating+1);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            businessDtos = businessMapper.mapResultSetToBusinessesDtos(resultSet);
+            if (businessDtos.size() == 0){
+                throw new BusinessNotFoundException("Businesses with rating " + rating + "not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return businessDtos;
+    }
 }

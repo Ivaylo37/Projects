@@ -20,7 +20,8 @@ public class BusinessController {
 
     @GetMapping("/businesses")
     public ResponseEntity printAllBusinesses(@RequestParam(required = false) String type,
-                                             @RequestParam(required = false) String city)
+                                             @RequestParam(required = false) String city,
+                                             @RequestParam(required = false) int rating)
     {
         List<BusinessDto> businessDtos;
         if (type != null){
@@ -38,7 +39,14 @@ public class BusinessController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
             return ResponseEntity.ok(businessDtos);
-
+        }
+        if (rating > 0){
+            try {
+                businessDtos = businessService.getBusinessesByRating(rating);
+            } catch (BusinessNotFoundException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            }
+            return ResponseEntity.ok(businessDtos);
         }
         businessDtos = businessService.getAllBusinesses();
         return ResponseEntity.ok(businessDtos);
