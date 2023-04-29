@@ -45,4 +45,21 @@ public class BusinessAccessor {
         }
         return businessDtos;
     }
+
+    public List<BusinessDto> getBusinessByCity(String city) throws BusinessNotFoundException {
+        List<BusinessDto> businessDtos;
+        String sql = "SELECT * FROM trippy.businesses WHERE city = ?";
+        try(Connection connection = DBConnector.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+            preparedStatement.setString(1, city);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            businessDtos = businessMapper.mapResultSetToBusinessesDtos(resultSet);
+            if (businessDtos.size() == 0){
+                throw new BusinessNotFoundException("Businesses from this city not found");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return businessDtos;
+    }
 }

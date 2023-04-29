@@ -22,4 +22,8 @@ public class BusinessService {
     public List<BusinessDto> getBusinessesByType(String type) throws BusinessNotFoundException {
         return businessAccessor.getBusinessByType(type);
     }
+
+    public List<BusinessDto> getBusinessesByCity(String city) throws BusinessNotFoundException {
+        return businessAccessor.getBusinessByCity(city);
+    }
 }
