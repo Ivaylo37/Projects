@@ -4,30 +4,31 @@ import java.time.LocalDate;
 
 public class Review {
     private int id;
-    private String userName;
-    private String businessName;
+    private int user;
+    private int business;
     private int rating;
     private String feedback;
     private LocalDate stampCreated;
 
-    public Review(int id, String userName, String businessName, int rating, String feedback) {
+    public Review(int id, int user, int business, int rating, String feedback, LocalDate stampCreated) {
         this.id = id;
-        this.userName = userName;
-        this.businessName = businessName;
+        this.user = user;
+        this.business = business;
         this.rating = rating;
         this.feedback = feedback;
+        this.stampCreated = stampCreated;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public int getUser() {
+        return user;
     }
 
-    public String getBusinessName() {
-        return businessName;
+    public int getBusiness() {
+        return business;
     }
 
     public int getRating() {
