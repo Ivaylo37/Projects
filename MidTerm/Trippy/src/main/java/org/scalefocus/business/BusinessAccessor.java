@@ -18,26 +18,26 @@ public class BusinessAccessor {
         this.businessMapper = businessMapper;
     }
 
-    public List<BusinessDto> getAllBusinesses(){
-        List<BusinessDto> businesses;
+    public List<Business> getAllBusinesses(){
+        List<Business> businesses;
         String sql = "SELECT * FROM trippy.businesses";
         try(Connection connection = DBConnector.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql)) {
-            businesses = businessMapper.mapResultSetToBusinessesDtos(resultSet);
+            businesses = businessMapper.mapResultSetToBusinesses(resultSet);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         return businesses;
     }
-    public List<BusinessDto> getBusinessByType(String type) throws BusinessNotFoundException {
-        List<BusinessDto> businessDtos;
+    public List<Business> getBusinessByType(String type) throws BusinessNotFoundException {
+        List<Business> businessDtos;
         String sql = "SELECT * FROM trippy.businesses WHERE type = ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, type);
             ResultSet resultSet = preparedStatement.executeQuery();
-            businessDtos = businessMapper.mapResultSetToBusinessesDtos(resultSet);
+            businessDtos = businessMapper.mapResultSetToBusinesses(resultSet);
             if (businessDtos.size() == 0){
                 throw new BusinessNotFoundException("Businesses from this type not found");
             }
@@ -47,14 +47,14 @@ public class BusinessAccessor {
         return businessDtos;
     }
 
-    public List<BusinessDto> getBusinessByCity(String city) throws BusinessNotFoundException {
-        List<BusinessDto> businessDtos;
+    public List<Business> getBusinessByCity(String city) throws BusinessNotFoundException {
+        List<Business> businessDtos;
         String sql = "SELECT * FROM trippy.businesses WHERE city = ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, city);
             ResultSet resultSet = preparedStatement.executeQuery();
-            businessDtos = businessMapper.mapResultSetToBusinessesDtos(resultSet);
+            businessDtos = businessMapper.mapResultSetToBusinesses(resultSet);
             if (businessDtos.size() == 0){
                 throw new BusinessNotFoundException("Businesses from this city not found");
             }
@@ -64,8 +64,8 @@ public class BusinessAccessor {
         return businessDtos;
     }
 
-    public List<BusinessDto> getBusinessByRating(int rating) throws BusinessNotFoundException {
-        List<BusinessDto> businessDtos;
+    public List<Business> getBusinessByRating(int rating) throws BusinessNotFoundException {
+        List<Business> businessDtos;
         String sql = "SELECT * FROM trippy.businesses WHERE rating BETWEEN ? and ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
@@ -73,7 +73,7 @@ public class BusinessAccessor {
             int ratingPlusOne = rating + 10;
             preparedStatement.setInt(2, ratingPlusOne);
             ResultSet resultSet = preparedStatement.executeQuery();
-            businessDtos = businessMapper.mapResultSetToBusinessesDtos(resultSet);
+            businessDtos = businessMapper.mapResultSetToBusinesses(resultSet);
             if (businessDtos.size() == 0){
                 throw new BusinessNotFoundException("Businesses with rating " + rating + "not found");
             }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "businesses")
 public class BusinessController {
 
     private final BusinessService businessService;
@@ -16,41 +17,41 @@ public class BusinessController {
         this.businessService = businessService;
     }
 
-    @GetMapping("/businesses")
+    @GetMapping
     public ResponseEntity printAllBusinesses(@RequestParam(required = false) String type,
                                              @RequestParam(required = false) String city,
                                              @RequestParam(required = false) Integer rating)
     {
-        List<BusinessDto> businessDtos;
+        List<Business> business;
         if (type != null){
             try {
-                businessDtos = businessService.getBusinessesByType(type);
+                business = businessService.getBusinessesByType(type);
             } catch (BusinessNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
-            return ResponseEntity.ok(businessDtos);
+            return ResponseEntity.ok(business);
         }
         if (city != null){
             try {
-                businessDtos = businessService.getBusinessesByCity(city);
+                business = businessService.getBusinessesByCity(city);
             } catch (BusinessNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
-            return ResponseEntity.ok(businessDtos);
+            return ResponseEntity.ok(business);
         }
         if (rating != null){
             try {
-                businessDtos = businessService.getBusinessesByRating(rating);
+                business = businessService.getBusinessesByRating(rating);
             } catch (BusinessNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
-            return ResponseEntity.ok(businessDtos);
+            return ResponseEntity.ok(business);
         }
-        businessDtos = businessService.getAllBusinesses();
-        return ResponseEntity.ok(businessDtos);
+        business = businessService.getAllBusinesses();
+        return ResponseEntity.ok(business);
     }
 
-    @PostMapping("/businesses")
+    @PostMapping
     public ResponseEntity addBusiness(@RequestBody BusinessRequest businessRequest){
         try {
             businessService.addBusiness(businessRequest);

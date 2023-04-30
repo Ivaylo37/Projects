@@ -3,16 +3,26 @@ package org.scalefocus.business;
 import java.util.List;
 
 public class Business {
-
+    int id;
     String type;
-    double rating;
+    int rating;
     List<String> reviews;
     String city;
     String phone;
     String email;
 
-    public Business(String type, String city, String phone, String email) {
+    public Business(int id, String type, String city, String phone, String email) {
+        this.id = id;
         this.type = type;
+        this.city = city;
+        this.phone = phone;
+        this.email = email;
+    }
+
+    public Business(int id, String type, int rating, String city, String phone, String email) {
+        this.id = id;
+        this.type = type;
+        this.rating = rating;
         this.city = city;
         this.phone = phone;
         this.email = email;
@@ -22,7 +32,7 @@ public class Business {
         return type;
     }
 
-    public double getRating() {
+    public int getRating() {
         return rating;
     }
 

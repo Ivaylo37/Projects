@@ -1,9 +1,6 @@
 package org.scalefocus.user;
 
-import org.scalefocus.customExceptions.InvalidEmailException;
-import org.scalefocus.customExceptions.InvalidPhoneNumberFormatException;
-import org.scalefocus.customExceptions.InvalidUsernameException;
-import org.scalefocus.customExceptions.UserNotFoundException;
+import org.scalefocus.customExceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,10 +55,12 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity addUser(@RequestBody UserRequest userRequest) {
         try {
-            userService.addUser(userRequest.getUsername(), userRequest.getEmail(),
+            userService.createUser(userRequest.getUsername(), userRequest.getEmail(),
                     userRequest.getPhone(), userRequest.getCity());
         } catch (InvalidUsernameException | InvalidPhoneNumberFormatException | InvalidEmailException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        } catch (InvalidCityException e) {
+            throw new RuntimeException(e); //Todo
         }
         return ResponseEntity.status(201).build();
     }

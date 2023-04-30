@@ -1,15 +1,13 @@
 package org.scalefocus.user;
 
 import org.scalefocus.customExceptions.*;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.InvalidPropertiesFormatException;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Component
+@Service
 public class UserService {
 
     private final UserAccessor userAccessor;
@@ -18,75 +16,59 @@ public class UserService {
         this.userAccessor = userAccessor;
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return userAccessor.getAllUsers();
     }
 
-    public User addUser(String username, String email, String phone,  String city) throws InvalidUsernameException, InvalidEmailException, InvalidPhoneNumberFormatException {
-        String validatedUsername = null;
-        validatedUsername = validateUsername(username);
-        String validatedEmail = null;
-        validatedEmail = validateEmail(email);
-        String validatedPhone = null;
-        validatedPhone = validatePhoneNumber(phone);
-        String validatedCity = null;
-        try {
-            validatedCity = validateCity(city);
-        } catch (InvalidCityException e) {
-            throw new RuntimeException(e);
-        }
-        User user = new User(validatedUsername, validatedEmail, validatedPhone, validatedCity);
-        userAccessor.addUser(validatedUsername, validatedEmail, validatedPhone, validatedCity);
-        return user;
+    public User createUser(String username, String email, String phone, String city) throws InvalidUsernameException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException {
+        validateUsername(username);
+        validateEmail(email);
+        validatePhoneNumber(phone);
+        validateCity(city);
+        return userAccessor.addUser(username, email, phone, city);
     }
 
     public User findUserByEmail(String email) throws UserNotFoundException {
-            return userAccessor.findUserByEmail(email);
+        return userAccessor.findUserByEmail(email);
     }
 
     public User findUserByUsername(String username) throws UserNotFoundException {
-            return userAccessor.findUserByUsername(username);
+        return userAccessor.findUserByUsername(username);
     }
 
     public User findUserById(int id) throws UserNotFoundException {
         return userAccessor.findUserById(id);
     }
 
-    private String validateEmail(String email) throws InvalidEmailException{
+    private void validateEmail(String email) throws InvalidEmailException {
         String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
-        if (matcher.matches()){
-            return email;
-        }
-        else {
+        if (!matcher.matches()) {
             throw new InvalidEmailException("The email is invalid.");
         }
     }
 
-    private String validateUsername(String username) throws InvalidUsernameException {
-        if (username.length() < 4){
+    private void validateUsername(String username) throws InvalidUsernameException {
+        if (username.length() < 4) {
             throw new InvalidUsernameException("The username should contain at least 4 characters!");
         }
-        return username;
     }
 
     private String validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
         String regex = "08[7-9][0-9]{7}";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(number);
-        if (matcher.matches()){
+        if (matcher.matches()) {
             return number;
-        }
-        else{
+        } else {
             throw new InvalidPhoneNumberFormatException("The format is invalid. Should be : 08(7/8/9).......");
         }
     }
 
-    private String validateCity(String city) throws InvalidCityException {
-        if (city.length() == 0){
+    private void validateCity(String city) throws InvalidCityException {
+        if (city.length() == 0) {
             throw new InvalidCityException("The city field can't be empty");
         }
-        return city;
     }
 }
