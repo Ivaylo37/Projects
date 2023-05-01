@@ -25,7 +25,7 @@ public class UserService {
         validateEmail(email);
         validatePhoneNumber(phone);
         validateCity(city);
-        return userAccessor.addUser(username, email, phone, city);
+        return userAccessor.createUser(username, email, phone, city);
     }
 
     public User findUserByEmail(String email) throws UserNotFoundException {

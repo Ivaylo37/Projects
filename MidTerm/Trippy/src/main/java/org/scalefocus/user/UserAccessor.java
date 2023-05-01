@@ -1,6 +1,5 @@
 package org.scalefocus.user;
 
-import com.sun.source.tree.TryTree;
 import org.scalefocus.customExceptions.UserNotFoundException;
 import org.scalefocus.util.db.DBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class UserAccessor {
         }
         return users;
     }
-    public User addUser(String username, String email, String phone,  String city){
+    public User createUser(String username, String email, String phone, String city){
         User user = new User(username, email, phone, city);
         String sql = "INSERT INTO trippy.users(username, email, phone, city, registration_date) VALUES(?, ?, ?, ?, ?)";
         try(Connection connection = DBConnector.getConnection();
