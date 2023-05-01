@@ -55,7 +55,7 @@ public class BusinessController {
         try {
             businessService.addBusiness(businessRequest);
         } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |
-                 InvalidEmailException | InvalidNameException e) {
+                 InvalidEmailException | InvalidNameException | BusinessAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
         return ResponseEntity.status(201).build();

@@ -158,4 +158,22 @@ public class BusinessAccessor {
             throw new RuntimeException(e);
         }
     }
+
+    public Business getBusinessByNameAndCity(String name, String city){
+        List<Business> businesses;
+        String sql = "SELECT * FROM trippy.business WHERE name = ? AND city = ?";
+        try(Connection connection = DBConnector.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, city);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            businesses = businessMapper.mapResultSetToBusinesses(resultSet);
+            if (businesses.size() == 0){
+                return null;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return businesses.get(0);
+    }
 }

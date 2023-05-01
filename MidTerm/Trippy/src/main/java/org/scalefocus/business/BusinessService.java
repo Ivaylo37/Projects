@@ -44,6 +44,12 @@ public class BusinessService {
         return businesses.get(0);
     }
 
+    public void validateUniqueBusiness(String businessName, String businessCity) throws BusinessAlreadyExistsException {
+        if (businessAccessor.getBusinessByNameAndCity(businessName, businessCity) != null){
+            throw new BusinessAlreadyExistsException("Business with this name from this city already exists");
+        }
+    }
+
     public List<Review> getReviewsByBusiness(int businessId) {
         return businessAccessor.getReviewsByBusiness(businessId);
     }
@@ -72,12 +78,13 @@ public class BusinessService {
         }
     }
 
-    public BusinessRequest addBusiness(BusinessRequest businessRequest) throws InvalidTypeException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException, InvalidNameException {
+    public BusinessRequest addBusiness(BusinessRequest businessRequest) throws InvalidTypeException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException, InvalidNameException, BusinessAlreadyExistsException {
         validateType(businessRequest.getType());
         validateEmail(businessRequest.getEmail());
         validatePhoneNumber(businessRequest.getPhone());
         validateCity(businessRequest.getCity());
         validateName(businessRequest.getName());
+        validateUniqueBusiness(businessRequest.getName(), businessRequest.getCity());
         BusinessRequest validatedBusinessRequest = new BusinessRequest(businessRequest.getType(), businessRequest.getName(),
                 businessRequest.getCity(), businessRequest.getPhone(), businessRequest.getEmail());
         return businessAccessor.addBusiness(validatedBusinessRequest);
