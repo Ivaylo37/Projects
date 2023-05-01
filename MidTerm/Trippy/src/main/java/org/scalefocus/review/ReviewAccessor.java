@@ -36,7 +36,7 @@ public class ReviewAccessor {
     public void createReview(int userId, int businessId, int rating, String feedback) {
         String sql = "INSERT INTO trippy.review(user_id, business_id, rating, feedback, stamp_created) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DBConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, businessId);
             preparedStatement.setInt(3, rating);
