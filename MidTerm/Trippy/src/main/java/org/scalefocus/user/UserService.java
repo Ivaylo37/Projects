@@ -53,6 +53,15 @@ public class UserService {
         if (username.length() < 4) {
             throw new InvalidUsernameException("The username should contain at least 4 characters!");
         }
+        User user = null;
+        try {
+            user = findUserByUsername(username);
+        } catch (UserNotFoundException e) {//TODO
+
+        }
+        if (user != null){
+            throw new InvalidUsernameException("Username already taken");
+        }
     }
 
     private String validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
