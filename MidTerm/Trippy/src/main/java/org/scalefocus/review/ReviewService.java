@@ -32,6 +32,7 @@ public class ReviewService {
         validateFeedback(feedback);
         reviewAccessor.createReview(userId, businessId, rating, feedback);
         businessService.calculateAndSetRating(businessId, rating);
+        businessService.updateReviewsCount(businessId);
     }
 
     public List<Review> getReviewsByBusiness(int businessId) throws ReviewNotFoundException {

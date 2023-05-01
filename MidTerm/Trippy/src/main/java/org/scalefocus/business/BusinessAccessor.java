@@ -146,4 +146,16 @@ public class BusinessAccessor {
             throw new RuntimeException(e);
         }
     }
+
+    public void updateReviewsCount(int businessId, int reviewsCount){
+        String sql = "UPDATE trippy.business SET reviews_count = ? WHERE id = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, reviewsCount);
+            preparedStatement.setInt(2, businessId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

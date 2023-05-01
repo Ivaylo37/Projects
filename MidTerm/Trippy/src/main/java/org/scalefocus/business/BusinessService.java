@@ -38,7 +38,10 @@ public class BusinessService {
     }
 
     public Business getBusinessById(int businessId) throws BusinessNotFoundException {
-        return businessAccessor.getBusinessById(businessId);
+        List<Business> businesses = new ArrayList<>();
+        businesses.add(businessAccessor.getBusinessById(businessId));
+        setReviewsToBusinesses(businesses);
+        return businesses.get(0);
     }
 
     public List<Review> getReviewsByBusiness(int businessId) {
@@ -123,5 +126,14 @@ public class BusinessService {
     }
     private void updateRating(int businessId, int rating){
         businessAccessor.updateRating(businessId, rating);
+    }
+    public void updateReviewsCount(int businessId){
+        int reviewsCount = 0;
+        try {
+            reviewsCount = getBusinessById(businessId).getReviews().size();
+        } catch (BusinessNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        businessAccessor.updateReviewsCount(businessId, reviewsCount);
     }
 }
