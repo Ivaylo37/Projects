@@ -40,7 +40,7 @@ public class ReviewService {
     }
 
     public void validateUserId(int userId) throws UserNotFoundException {
-        userService.findUserById(userId);
+        userService.getUserById(userId);
     }
 
     public void validateBusinessId(int businessId) throws BusinessNotFoundException {

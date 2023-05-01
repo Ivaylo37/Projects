@@ -53,7 +53,7 @@ public class BusinessController {
     @PostMapping
     public ResponseEntity addBusiness(@RequestBody BusinessRequest businessRequest) {
         try {
-            businessService.addBusiness(businessRequest);
+            businessService.createBusiness(businessRequest);
         } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |
                  InvalidEmailException | InvalidNameException | BusinessAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());

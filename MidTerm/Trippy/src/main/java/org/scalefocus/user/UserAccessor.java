@@ -1,21 +1,27 @@
 package org.scalefocus.user;
 
 import org.scalefocus.customExceptions.UserNotFoundException;
+import org.scalefocus.review.Review;
+import org.scalefocus.review.ReviewMapper;
 import org.scalefocus.util.db.DBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class UserAccessor {
 
     private final UserMapper userMapper;
+
+    private final ReviewMapper reviewMapper;
     @Autowired
-    public UserAccessor(UserMapper userMapper) {
+    public UserAccessor(UserMapper userMapper, ReviewMapper reviewMapper) {
         this.userMapper = userMapper;
+        this.reviewMapper = reviewMapper;
     }
     public List<User> getAllUsers(){
         List<User> users;
@@ -99,5 +105,19 @@ public class UserAccessor {
             throw new RuntimeException(e);
         }
         return user;
+    }
+
+    public List<Review> getReviewsByUser(int userId){
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT * FROM trippy.review WHERE user_id = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            reviews = reviewMapper.mapReviewsResultSetToReviews(resultSet);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return reviews;
     }
 }

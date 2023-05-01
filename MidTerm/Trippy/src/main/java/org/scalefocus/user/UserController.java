@@ -25,7 +25,7 @@ public class UserController {
         if (username != null){
             User user = null;
             try {
-                user = userService.findUserByUsername(username);
+                user = userService.getUserByUsername(username);
             } catch (UserNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
@@ -34,7 +34,7 @@ public class UserController {
         if (email != null){
             User user = null;
             try {
-                user = userService.findUserByEmail(email);
+                user = userService.getUserByEmail(email);
             } catch (UserNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
@@ -43,7 +43,7 @@ public class UserController {
         if (id != null){
             User user = null;
             try {
-                user = userService.findUserById(id);
+                user = userService.getUserById(id);
             } catch (UserNotFoundException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
             }
