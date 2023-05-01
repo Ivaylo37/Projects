@@ -53,6 +53,22 @@ public class BusinessService {
         return businessesWithReviews;
     }
 
+    public void calculateAndSetRating(int businessId, int rating){
+        Business businessToBeEdited;
+        try {
+            businessToBeEdited = getBusinessById(businessId);
+        } catch (BusinessNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        int oldRating = businessToBeEdited.getRating();
+        if (oldRating == 0){
+            updateRating(businessId, rating * 10);
+        }else {
+            int newRating = ((oldRating * 10) + (rating * 10)) / 2;
+            updateRating(businessId, newRating);
+        }
+    }
+
     public BusinessRequest addBusiness(BusinessRequest businessRequest) throws InvalidTypeException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException, InvalidNameException {
         validateType(businessRequest.getType());
         validateEmail(businessRequest.getEmail());
@@ -84,7 +100,6 @@ public class BusinessService {
             throw new InvalidEmailException("The email is invalid.");
         }
     }
-
     private void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
         String regex = "08[7-9][0-9]{7}";
         Pattern pattern = Pattern.compile(regex);
@@ -93,7 +108,6 @@ public class BusinessService {
             throw new InvalidPhoneNumberFormatException("The format is invalid. Should be : 08(7/8/9).......");
         }
     }
-
     private void validateCity(String city) throws InvalidCityException {
         if (city.length() == 0){
             throw new InvalidCityException("The city field can't be empty");
@@ -102,10 +116,12 @@ public class BusinessService {
             throw new InvalidCityException("Max length 20");
         }
     }
-
     private void validateName(String name) throws InvalidNameException {
         if (name.length() == 0 || name.length() > 30){
             throw new InvalidNameException("The name must be between 0 and 30 characters.");
         }
+    }
+    private void updateRating(int businessId, int rating){
+        businessAccessor.updateRating(businessId, rating);
     }
 }

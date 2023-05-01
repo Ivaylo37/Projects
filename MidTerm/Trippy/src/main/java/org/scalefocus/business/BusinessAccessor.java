@@ -73,9 +73,10 @@ public class BusinessAccessor {
         String sql = "SELECT * FROM trippy.business WHERE rating BETWEEN ? and ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+            int ratingTimesTen = rating * 10;
             preparedStatement.setInt(1, rating);
-            int ratingPlusOne = rating + 10;
-            preparedStatement.setInt(2, ratingPlusOne);
+            int ratingPlusTen = ratingTimesTen + 10;
+            preparedStatement.setInt(2, ratingPlusTen);
             ResultSet resultSet = preparedStatement.executeQuery();
             business = businessMapper.mapResultSetToBusinesses(resultSet);
             if (business.size() == 0){
@@ -132,5 +133,17 @@ public class BusinessAccessor {
             throw new RuntimeException(e);
         }
         return reviews;
+    }
+
+    public void updateRating(int businessId, int rating){
+        String sql = "UPDATE trippy.business SET rating = ? WHERE id = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, rating);
+            preparedStatement.setInt(2, businessId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
