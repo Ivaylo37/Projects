@@ -20,7 +20,7 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity printAllUsers(@RequestParam(required = false) String username,
                                         @RequestParam(required = false) String email,
-                                        @RequestParam(required = false) int id)
+                                        @RequestParam(required = false) Integer id)
     {
         if (username != null){
             User user = null;
@@ -40,7 +40,7 @@ public class UserController {
             }
             return ResponseEntity.ok(user);
         }
-        if (id > 0){
+        if (id != null){
             User user = null;
             try {
                 user = userService.findUserById(id);

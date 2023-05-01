@@ -14,12 +14,12 @@ public class BusinessMapper {
         try(businessResultSet){
             while (businessResultSet.next()){
                 int id = businessResultSet.getInt(1);
-                String type = businessResultSet.getString(2);
-                int rating = businessResultSet.getInt(3);
-                String email = businessResultSet.getString(5);
-                String phone = businessResultSet.getString(6);
-                String city = businessResultSet.getString(7);
-                List<String> reviews = new ArrayList<>();//TODO
+                String name = businessResultSet.getString(2);
+                String type = businessResultSet.getString(3);
+                int rating = businessResultSet.getInt(4);
+                String email = businessResultSet.getString(6);
+                String phone = businessResultSet.getString(7);
+                String city = businessResultSet.getString(8);
                 Business business = new Business(id, type, rating, city, phone, email);
                 businesses.add(business);
             }

@@ -19,11 +19,10 @@ public class BusinessController {
 
     @GetMapping
     public ResponseEntity printBusinesses(@RequestParam(required = false) String type,
-                                             @RequestParam(required = false) String city,
-                                             @RequestParam(required = false) Integer rating)
-    {
+                                          @RequestParam(required = false) String city,
+                                          @RequestParam(required = false) Integer rating) {
         List<Business> business;
-        if (type != null){
+        if (type != null) {
             try {
                 business = businessService.getBusinessesByType(type);
             } catch (BusinessNotFoundException e) {
@@ -31,7 +30,7 @@ public class BusinessController {
             }
             return ResponseEntity.ok(business);
         }
-        if (city != null){
+        if (city != null) {
             try {
                 business = businessService.getBusinessesByCity(city);
             } catch (BusinessNotFoundException e) {
@@ -39,7 +38,7 @@ public class BusinessController {
             }
             return ResponseEntity.ok(business);
         }
-        if (rating != null){
+        if (rating != null) {
             try {
                 business = businessService.getBusinessesByRating(rating);
             } catch (BusinessNotFoundException e) {
@@ -52,14 +51,13 @@ public class BusinessController {
     }
 
     @PostMapping
-    public ResponseEntity addBusiness(@RequestBody BusinessRequest businessRequest){
+    public ResponseEntity addBusiness(@RequestBody BusinessRequest businessRequest) {
         try {
             businessService.addBusiness(businessRequest);
         } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |
-                 InvalidEmailException e) {
+                 InvalidEmailException | InvalidNameException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
         return ResponseEntity.status(201).build();
-
     }
 }

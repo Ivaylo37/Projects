@@ -1,7 +1,6 @@
 package org.scalefocus.business;
 
 import org.scalefocus.customExceptions.BusinessNotFoundException;
-import org.scalefocus.customExceptions.ReviewNotFoundException;
 import org.scalefocus.review.Review;
 import org.scalefocus.review.ReviewMapper;
 import org.scalefocus.util.db.DBConnector;
@@ -25,7 +24,7 @@ public class BusinessAccessor {
 
     public List<Business> getAllBusinesses(){
         List<Business> businesses;
-        String sql = "SELECT * FROM trippy.businesses";
+        String sql = "SELECT * FROM trippy.business";
         try(Connection connection = DBConnector.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql)) {
@@ -37,7 +36,7 @@ public class BusinessAccessor {
     }
     public List<Business> getBusinessByType(String type) throws BusinessNotFoundException {
         List<Business> business;
-        String sql = "SELECT * FROM trippy.businesses WHERE type = ?";
+        String sql = "SELECT * FROM trippy.business WHERE type = ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, type);
@@ -54,7 +53,7 @@ public class BusinessAccessor {
 
     public List<Business> getBusinessByCity(String city) throws BusinessNotFoundException {
         List<Business> businessDtos;
-        String sql = "SELECT * FROM trippy.businesses WHERE city = ?";
+        String sql = "SELECT * FROM trippy.business WHERE city = ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, city);
@@ -71,7 +70,7 @@ public class BusinessAccessor {
 
     public List<Business> getBusinessByRating(int rating) throws BusinessNotFoundException {
         List<Business> business;
-        String sql = "SELECT * FROM trippy.businesses WHERE rating BETWEEN ? and ?";
+        String sql = "SELECT * FROM trippy.business WHERE rating BETWEEN ? and ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setInt(1, rating);
@@ -89,13 +88,14 @@ public class BusinessAccessor {
     }
 
     public BusinessRequest addBusiness(BusinessRequest businessRequest){
-        String sql = "INSERT INTO trippy.businesses(type, email, phone, city) VALUES (?, ?, ?, ?);";
+        String sql = "INSERT INTO trippy.business(type, name, email, phone, city) VALUES (?, ?, ?, ?, ?);";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, businessRequest.getType());
-            preparedStatement.setString(2, businessRequest.getEmail());
-            preparedStatement.setString(3, businessRequest.getPhone());
-            preparedStatement.setString(4, businessRequest.getCity());
+            preparedStatement.setString(2, businessRequest.getName());
+            preparedStatement.setString(3, businessRequest.getEmail());
+            preparedStatement.setString(4, businessRequest.getPhone());
+            preparedStatement.setString(5, businessRequest.getCity());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -105,7 +105,7 @@ public class BusinessAccessor {
 
     public Business getBusinessById(int businessId) throws BusinessNotFoundException {
         List<Business> businesses;
-        String sql = "SELECT * FROM trippy.businesses WHERE business_id = ?";
+        String sql = "SELECT * FROM trippy.business WHERE id = ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setInt(1, businessId);

@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Business {
     private int id;
+    private String name;
     private String type;
     private int rating;
     private List<Review> reviews;
@@ -59,5 +60,8 @@ public class Business {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+    public String getName() {
+        return name;
     }
 }

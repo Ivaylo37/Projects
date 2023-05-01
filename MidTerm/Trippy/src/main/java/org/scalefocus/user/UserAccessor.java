@@ -19,7 +19,7 @@ public class UserAccessor {
     }
     public List<User> getAllUsers(){
         List<User> users;
-        String sql = "SELECT * FROM trippy.users";
+        String sql = "SELECT * FROM trippy.user";
         try(Connection connection = DBConnector.getConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(sql)) {
@@ -31,7 +31,7 @@ public class UserAccessor {
     }
     public User createUser(String username, String email, String phone, String city){
         User user = new User(username, email, phone, city);
-        String sql = "INSERT INTO trippy.users(username, email, phone, city, registration_date) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO trippy.user(username, email, phone, city, registration_date) VALUES(?, ?, ?, ?, ?)";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);)
             {
@@ -49,7 +49,7 @@ public class UserAccessor {
 
     public User findUserByEmail(String email) throws UserNotFoundException{
         User user;
-        String sql = "SELECT * FROM trippy.users WHERE email = ?";
+        String sql = "SELECT * FROM trippy.user WHERE email = ?";
         try(Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, email);
@@ -67,7 +67,7 @@ public class UserAccessor {
 
     public User findUserByUsername(String username) throws UserNotFoundException{
         User user;
-        String sql = "SELECT * FROM trippy.users WHERE username = ?";
+        String sql = "SELECT * FROM trippy.user WHERE username = ?";
         try (Connection connection = DBConnector.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, username);
@@ -85,7 +85,7 @@ public class UserAccessor {
 
     public User findUserById(int id) throws UserNotFoundException {
         User user;
-        String sql = "SELECT * FROM trippy.users WHERE user_id = ?";
+        String sql = "SELECT * FROM trippy.user WHERE id = ?";
         try (Connection connection = DBConnector.getConnection();
         PreparedStatement preparedStatement = connection.prepareStatement(sql)){
         preparedStatement.setInt(1, id);
