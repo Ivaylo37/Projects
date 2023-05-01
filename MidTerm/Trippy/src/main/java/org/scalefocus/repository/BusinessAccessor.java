@@ -39,7 +39,7 @@ public class BusinessAccessor {
         return businesses;
     }
 
-    public List<Business> getBusinessByType(String type) throws BusinessNotFoundException {
+    public List<Business> getBusinessByType(String type) {
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE type = ?";
         try (Connection connection = DBConnector.getConnection();
@@ -56,7 +56,7 @@ public class BusinessAccessor {
         return business;
     }
 
-    public List<Business> getBusinessByCity(String city) throws BusinessNotFoundException {
+    public List<Business> getBusinessByCity(String city) {
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE city = ?";
         try (Connection connection = DBConnector.getConnection();
@@ -91,7 +91,7 @@ public class BusinessAccessor {
         return businesses.get(0);
     }
 
-    public List<Business> getBusinessByRating(int rating) throws BusinessNotFoundException {
+    public List<Business> getBusinessByRating(int rating) {
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE rating BETWEEN ? and ?";
         try (Connection connection = DBConnector.getConnection();
@@ -111,7 +111,7 @@ public class BusinessAccessor {
         return business;
     }
 
-    public Business getBusinessById(int businessId) throws BusinessNotFoundException {
+    public Business getBusinessById(int businessId) {
         List<Business> businesses;
         String sql = "SELECT * FROM trippy.business WHERE id = ?";
         try (Connection connection = DBConnector.getConnection();

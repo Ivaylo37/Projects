@@ -26,28 +26,13 @@ public class BusinessController {
                                           @RequestParam(required = false) Integer rating) {
         List<Business> business;
         if (type != null) {
-            try {
-                business = businessService.getBusinessesByType(type);
-            } catch (BusinessNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(business);
+            return ResponseEntity.ok(businessService.getBusinessesByType(type));
         }
         if (city != null) {
-            try {
-                business = businessService.getBusinessesByCity(city);
-            } catch (BusinessNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(business);
+            return ResponseEntity.ok(businessService.getBusinessesByCity(city));
         }
         if (rating != null) {
-            try {
-                business = businessService.getBusinessesByRating(rating);
-            } catch (BusinessNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(business);
+            return ResponseEntity.ok(businessService.getBusinessesByRating(rating));
         }
         business = businessService.getAllBusinesses();
         return ResponseEntity.ok(business);
@@ -55,12 +40,7 @@ public class BusinessController {
 
     @PostMapping
     public ResponseEntity createBusiness(@RequestBody BusinessRequest businessRequest) {
-        try {
-            businessService.createBusiness(businessRequest);
-        } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |
-                 InvalidEmailException | InvalidNameException | BusinessAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-        }
+        businessService.createBusiness(businessRequest);
         return ResponseEntity.status(201).build();
     }
 
@@ -69,18 +49,10 @@ public class BusinessController {
                                        @RequestParam(required = false) String email,
                                        @RequestParam(required = false) String phone) {
         if (email != null) {
-            try {
-                businessService.updateEmail(id, email);
-            } catch (InvalidEmailException e) {
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-            }
+            businessService.updateEmail(id, email);
         }
         if (phone != null) {
-            try {
-                businessService.updatePhoneNumber(id, phone);
-            } catch (InvalidPhoneNumberFormatException e) {
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-            }
+            businessService.updatePhoneNumber(id, phone);
         }
         return ResponseEntity.status(201).build();
     }

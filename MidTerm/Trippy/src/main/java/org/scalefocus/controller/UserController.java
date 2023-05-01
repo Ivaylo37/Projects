@@ -26,31 +26,13 @@ public class UserController {
                                    @RequestParam(required = false) String email,
                                    @RequestParam(required = false) Integer id) {
         if (username != null) {
-            User user = null;
-            try {
-                user = userService.getUserByUsername(username);
-            } catch (UserNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(userService.getUserByUsername(username));
         }
         if (email != null) {
-            User user = null;
-            try {
-                user = userService.getUserByEmail(email);
-            } catch (UserNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(userService.getUserByEmail(email));
         }
         if (id != null) {
-            User user = null;
-            try {
-                user = userService.getUserById(id);
-            } catch (UserNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(userService.getUserById(id));
         }
         List<User> userList = userService.getAllUsers();
         return ResponseEntity.ok(userList);
@@ -58,13 +40,8 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity createUser(@RequestBody UserRequest userRequest) {
-        try {
             userService.createUser(userRequest.getUsername(), userRequest.getEmail(),
                     userRequest.getPhone(), userRequest.getCity());
-        } catch (InvalidCityException | InvalidUsernameException | InvalidPhoneNumberFormatException |
-                 InvalidEmailException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-        }
         return ResponseEntity.status(201).build();
     }
 }

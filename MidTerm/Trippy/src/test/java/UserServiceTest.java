@@ -21,7 +21,7 @@ public class UserServiceTest {
 
     //createUser_Throws_When_UsernameIsInvalid
     @Test
-    public void createUser_Works_Properly() throws InvalidUsernameException, InvalidPhoneNumberFormatException, InvalidEmailException, InvalidCityException {
+    public void createUser_Works_Properly() throws InvalidUsernameException, InvalidPhoneNumberFormatException, InvalidEmailException {
         //Arrange - Given
         String username = "Ivailo";
         String email = "ivssi@pederas.com";

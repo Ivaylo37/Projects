@@ -1,6 +1,6 @@
 package org.scalefocus.exception;
 
-public class InvalidPhoneNumberFormatException extends Throwable{
+public class InvalidPhoneNumberFormatException extends RuntimeException{
 
     public InvalidPhoneNumberFormatException(String message){
         super(message);

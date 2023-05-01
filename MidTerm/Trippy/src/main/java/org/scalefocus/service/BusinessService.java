@@ -29,19 +29,19 @@ public class BusinessService {
         return setReviewsToBusinesses(businessAccessor.getAllBusinesses());
     }
 
-    public List<Business> getBusinessesByType(String type) throws BusinessNotFoundException {
+    public List<Business> getBusinessesByType(String type) {
         return setReviewsToBusinesses(businessAccessor.getBusinessByType(type));
     }
 
-    public List<Business> getBusinessesByCity(String city) throws BusinessNotFoundException {
+    public List<Business> getBusinessesByCity(String city) {
         return setReviewsToBusinesses(businessAccessor.getBusinessByCity(city));
     }
 
-    public List<Business> getBusinessesByRating(int rating) throws BusinessNotFoundException {
+    public List<Business> getBusinessesByRating(int rating) {
         return setReviewsToBusinesses(businessAccessor.getBusinessByRating(rating));
     }
 
-    public Business getBusinessById(int businessId) throws BusinessNotFoundException {
+    public Business getBusinessById(int businessId) {
         List<Business> businesses = new ArrayList<>();
         businesses.add(businessAccessor.getBusinessById(businessId));
         setReviewsToBusinesses(businesses);
@@ -67,21 +67,13 @@ public class BusinessService {
 
     public void updateReviewsCount(int businessId) {
         int reviewsCount = 0;
-        try {
-            reviewsCount = getBusinessById(businessId).getReviews().size();
-        } catch (BusinessNotFoundException e) {
-            throw new RuntimeException(e); //TODO
-        }
+        reviewsCount = getBusinessById(businessId).getReviews().size();
         businessAccessor.updateReviewsCount(businessId, reviewsCount);
     }
 
     public void calculateAndSetRating(int businessId, int rating) {
         Business businessToBeEdited;
-        try {
-            businessToBeEdited = getBusinessById(businessId);
-        } catch (BusinessNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        businessToBeEdited = getBusinessById(businessId);
         int oldRating = businessToBeEdited.getRating();
         if (oldRating == 0) {
             updateRating(businessId, rating * 10);
@@ -91,7 +83,7 @@ public class BusinessService {
         }
     }
 
-    public BusinessRequest createBusiness(BusinessRequest businessRequest) throws InvalidTypeException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException, InvalidNameException, BusinessAlreadyExistsException {
+    public BusinessRequest createBusiness(BusinessRequest businessRequest) throws InvalidTypeException, InvalidPhoneNumberFormatException, InvalidNameException {
         validateType(businessRequest.getType());
         validateEmail(businessRequest.getEmail());
         validatePhoneNumber(businessRequest.getPhone());
@@ -142,7 +134,7 @@ public class BusinessService {
         }
     }
 
-    private void validateCity(String city) throws InvalidCityException {
+    private void validateCity(String city) {
         if (city.length() == 0) {
             throw new InvalidCityException(Constants.EMPTY_CITY_NAME_FIELD_MESSAGE);
         }
@@ -157,7 +149,7 @@ public class BusinessService {
         }
     }
 
-    public void validateUniqueBusiness(String businessName, String businessCity) throws BusinessAlreadyExistsException {
+    public void validateUniqueBusiness(String businessName, String businessCity){
         if (businessAccessor.getBusinessByNameAndCity(businessName, businessCity) != null) {
             throw new BusinessAlreadyExistsException(Constants.BUSINESS_NOT_UNIQUE_MESSAGE);
         }

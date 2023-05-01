@@ -26,7 +26,7 @@ public class ReviewService {
         return reviewAccessor.getAllReviews();
     }
 
-    public void createReview(int userId, int businessId, int rating, String feedback) throws InvalidFeedbackException, InvalidRatingException, UserNotFoundException, BusinessNotFoundException {
+    public void createReview(int userId, int businessId, int rating, String feedback) throws InvalidFeedbackException, InvalidRatingException, UserNotFoundException {
         validateUserId(userId);
         validateBusinessId(businessId);
         validateRating(rating);
@@ -44,7 +44,7 @@ public class ReviewService {
         userService.getUserById(userId);
     }
 
-    public void validateBusinessId(int businessId) throws BusinessNotFoundException {
+    public void validateBusinessId(int businessId) {
         businessService.getBusinessById(businessId);
     }
 

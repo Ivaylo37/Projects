@@ -55,7 +55,7 @@ public class UserService {
         return user;
     }
 
-    public User createUser(String username, String email, String phone, String city) throws InvalidUsernameException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException {
+    public User createUser(String username, String email, String phone, String city) throws InvalidUsernameException, InvalidEmailException, InvalidPhoneNumberFormatException {
         validateUsername(username);
         validateEmail(email);
         validatePhoneNumber(phone);
@@ -96,7 +96,7 @@ public class UserService {
         }
     }
 
-    private void validateCity(String city) throws InvalidCityException {
+    private void validateCity(String city) {
         if (city.length() == 0) {
             throw new InvalidCityException(Constants.EMPTY_CITY_NAME_FIELD_MESSAGE);
         }

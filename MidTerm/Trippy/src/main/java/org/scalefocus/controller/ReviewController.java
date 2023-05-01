@@ -24,12 +24,7 @@ public class ReviewController {
     public ResponseEntity getReviews(@RequestParam(required = false) Integer businessId) {
         List<Review> reviews;
         if (businessId != null) {
-            try {
-                reviews = reviewService.getReviewsByBusiness(businessId);
-            } catch (ReviewNotFoundException e) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            }
-            return ResponseEntity.ok(reviews);
+            return ResponseEntity.ok(reviewService.getReviewsByBusiness(businessId));
         }
         reviews = reviewService.getAllReviews();
         return ResponseEntity.ok(reviews);
@@ -37,13 +32,8 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity createReview(@RequestBody ReviewRequest reviewRequest) {
-        try {
-            reviewService.createReview(reviewRequest.getUserId(), reviewRequest.getBusinessId(),
-                    reviewRequest.getRating(), reviewRequest.getFeedback());
-        } catch (InvalidFeedbackException | InvalidRatingException | UserNotFoundException |
-                 BusinessNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-        }
+        reviewService.createReview(reviewRequest.getUserId(), reviewRequest.getBusinessId(),
+                reviewRequest.getRating(), reviewRequest.getFeedback());
         return ResponseEntity.status(201).build();
     }
 }
