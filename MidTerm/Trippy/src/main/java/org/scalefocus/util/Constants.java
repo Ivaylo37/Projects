@@ -5,7 +5,7 @@ import jakarta.servlet.http.PushBuilder;
 public class Constants {
    public static final String EMAIL_VALIDATION_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
-   public static final String PHONE_VALIDATION_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
+   public static final String PHONE_VALIDATION_REGEX = "08[789]\\d{7}";
 
    public static final int EMAIL_MAX_LENGTH = 30;
 

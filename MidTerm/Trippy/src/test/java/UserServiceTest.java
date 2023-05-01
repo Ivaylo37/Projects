@@ -4,9 +4,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.scalefocus.customExceptions.*;
-import org.scalefocus.user.User;
-import org.scalefocus.user.UserService;
+import org.scalefocus.exception.*;
+import org.scalefocus.domain.User;
+import org.scalefocus.service.UserService;
 
 import java.time.LocalDate;
 
