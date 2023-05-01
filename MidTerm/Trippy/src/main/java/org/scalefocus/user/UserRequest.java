@@ -2,14 +2,13 @@ package org.scalefocus.user;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import java.time.LocalDate;
-import java.util.List;
 
 public class UserRequest {
     String username;
     String email;
     String phone;
     String city;
+
     @JsonCreator
     public UserRequest(String username, String email, String phone, String city) {
         this.username = username;

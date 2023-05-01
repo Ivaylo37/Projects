@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping(value = "review")
 public class ReviewController {
 
     private final ReviewService reviewService;
@@ -16,10 +17,10 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
-    @GetMapping("/review")
-    public ResponseEntity getReviews(@RequestParam(required = false) Integer businessId){
+    @GetMapping
+    public ResponseEntity getReviews(@RequestParam(required = false) Integer businessId) {
         List<Review> reviews;
-        if (businessId != null){
+        if (businessId != null) {
             try {
                 reviews = reviewService.getReviewsByBusiness(businessId);
             } catch (ReviewNotFoundException e) {
@@ -31,12 +32,13 @@ public class ReviewController {
         return ResponseEntity.ok(reviews);
     }
 
-    @PostMapping("/review")
-    public ResponseEntity createReview(@RequestBody ReviewRequest reviewRequest){
+    @PostMapping
+    public ResponseEntity createReview(@RequestBody ReviewRequest reviewRequest) {
         try {
             reviewService.createReview(reviewRequest.getUserId(), reviewRequest.getBusinessId(),
                     reviewRequest.getRating(), reviewRequest.getFeedback());
-        } catch (InvalidFeedbackException | InvalidRatingException | UserNotFoundException | BusinessNotFoundException e) {
+        } catch (InvalidFeedbackException | InvalidRatingException | UserNotFoundException |
+                 BusinessNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
         }
         return ResponseEntity.status(201).build();

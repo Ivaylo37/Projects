@@ -14,7 +14,7 @@ public class User {
     List<Review> reviews;
     LocalDate registrationDate;
 
-    public User(String username, String email, String phone,  String city) {
+    public User(String username, String email, String phone, String city) {
         this.username = username;
         this.email = email;
         this.phone = phone;
@@ -33,6 +33,7 @@ public class User {
     public int getId() {
         return id;
     }
+
     public String getUsername() {
         return username;
     }
@@ -40,6 +41,7 @@ public class User {
     public String getEmail() {
         return email;
     }
+
     public String getPhone() {
         return phone;
     }
@@ -47,12 +49,15 @@ public class User {
     public String getCity() {
         return city;
     }
+
     public List<Review> getReviews() {
         return reviews;
     }
+
     public LocalDate getRegistrationDate() {
         return registrationDate;
     }
+
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }

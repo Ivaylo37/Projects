@@ -51,7 +51,7 @@ public class BusinessController {
     }
 
     @PostMapping
-    public ResponseEntity addBusiness(@RequestBody BusinessRequest businessRequest) {
+    public ResponseEntity createBusiness(@RequestBody BusinessRequest businessRequest) {
         try {
             businessService.createBusiness(businessRequest);
         } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |

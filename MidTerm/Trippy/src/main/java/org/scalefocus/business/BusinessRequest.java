@@ -9,6 +9,7 @@ public class BusinessRequest {
     String city;
     String phone;
     String email;
+
     @JsonCreator
     public BusinessRequest(String type, String name, String city, String phone, String email) {
         this.type = type;

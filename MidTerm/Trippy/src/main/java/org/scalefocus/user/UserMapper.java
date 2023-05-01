@@ -7,13 +7,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 public class UserMapper {
 
-    public List<User> mapResultSetToUsers(ResultSet usersResultSet){
+    public List<User> mapResultSetToUsers(ResultSet usersResultSet) {
         List<User> users = new ArrayList<>();
-        try(usersResultSet){
-            while (usersResultSet.next()){
+        try (usersResultSet) {
+            while (usersResultSet.next()) {
                 int id = usersResultSet.getInt(1);
                 String username = usersResultSet.getString(2);
                 String email = usersResultSet.getString(3);

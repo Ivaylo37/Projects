@@ -1,8 +1,8 @@
 package org.scalefocus.user;
 
-import org.scalefocus.business.Business;
 import org.scalefocus.customExceptions.*;
 import org.scalefocus.review.Review;
+import org.scalefocus.util.Constants;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class UserService {
         return setReviewToUser(userAccessor.findUserById(id));
     }
 
-    public List<Review> getReviewsByUser(int userId){
+    public List<Review> getReviewsByUser(int userId) {
         return userAccessor.getReviewsByUser(userId);
     }
 
@@ -48,10 +48,11 @@ public class UserService {
         return usersWithReviews;
     }
 
-    public User setReviewToUser(User user){
+    public User setReviewToUser(User user) {
         user.setReviews(getReviewsByUser(user.getId()));
         return user;
     }
+
     public User createUser(String username, String email, String phone, String city) throws InvalidUsernameException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException {
         validateUsername(username);
         validateEmail(email);
@@ -61,17 +62,17 @@ public class UserService {
     }
 
     private void validateEmail(String email) throws InvalidEmailException {
-        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        String regex = Constants.EMAIL_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
-            throw new InvalidEmailException("The email is invalid.");
+            throw new InvalidEmailException(Constants.INVALID_EMAIL_FORMAT_MESSAGE);
         }
     }
 
     private void validateUsername(String username) throws InvalidUsernameException {
-        if (username.length() < 4) {
-            throw new InvalidUsernameException("The username should contain at least 4 characters!");
+        if (username.length() < Constants.MIN_USERNAME_LENGTH || username.length() > Constants.MAX_USERNAME_LENGTH) {
+            throw new InvalidUsernameException(Constants.INVALID_USERNAME_LENGTH_MESSAGE);
         }
         User user = null;
         try {
@@ -79,23 +80,23 @@ public class UserService {
         } catch (UserNotFoundException e) {//TODO
 
         }
-        if (user != null){
-            throw new InvalidUsernameException("Username already taken");
+        if (user != null) {
+            throw new InvalidUsernameException(Constants.USERNAME_NOT_UNIQUE_MESSAGE);
         }
     }
 
     private void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
-        String regex = "08[7-9][0-9]{7}";
+        String regex = Constants.PHONE_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(number);
         if (!matcher.matches()) {
-            throw new InvalidPhoneNumberFormatException("The format is invalid. Should be : 08(7/8/9).......");
+            throw new InvalidPhoneNumberFormatException(Constants.INVALID_PHONE_FORMAT_MESSAGE);
         }
     }
 
     private void validateCity(String city) throws InvalidCityException {
         if (city.length() == 0) {
-            throw new InvalidCityException("The city field can't be empty");
+            throw new InvalidCityException(Constants.EMPTY_CITY_NAME_FIELD_MESSAGE);
         }
     }
 }

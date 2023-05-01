@@ -2,6 +2,7 @@ package org.scalefocus.business;
 
 import org.scalefocus.customExceptions.*;
 import org.scalefocus.review.Review;
+import org.scalefocus.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -95,67 +96,68 @@ public class BusinessService {
         validateUniqueBusiness(businessRequest.getName(), businessRequest.getCity());
         BusinessRequest validatedBusinessRequest = new BusinessRequest(businessRequest.getType(), businessRequest.getName(),
                 businessRequest.getCity(), businessRequest.getPhone(), businessRequest.getEmail());
-        return businessAccessor.addBusiness(validatedBusinessRequest);
+        return businessAccessor.createBusiness(validatedBusinessRequest);
     }
 
-    public void updateEmail(int businessId, String newEmail) throws InvalidEmailException{
-            validateEmail(newEmail);
-            businessAccessor.updateEmail(businessId, newEmail);
+    public void updateEmail(int businessId, String newEmail) throws InvalidEmailException {
+        validateEmail(newEmail);
+        businessAccessor.updateEmail(businessId, newEmail);
     }
 
     public void updatePhoneNumber(int businessId, String newPhoneNumber) throws InvalidPhoneNumberFormatException {
         validatePhoneNumber(newPhoneNumber);
         businessAccessor.updatePhoneNumber(businessId, newPhoneNumber);
     }
+
     public void validateType(String type) throws InvalidTypeException {
         List<String> validTypes = new ArrayList<>();
         validTypes.add("bar");
         validTypes.add("hotel");
         validTypes.add("restaurant");
         if (!validTypes.contains(type)) {
-            throw new InvalidTypeException("The type is invalid. Valid types : bar, hotel, restaurant");
+            throw new InvalidTypeException(Constants.INVALID_TYPE_MESSAGE);
         }
     }
 
     private void validateEmail(String email) throws InvalidEmailException {
-        if (email.length() > 30) {
-            throw new InvalidEmailException("Max length 30");
+        if (email.length() > Constants.EMAIL_MAX_LENGTH) {
+            throw new InvalidEmailException(Constants.EMAIL_MAX_LENGTH_EXCEEDED_MESSAGE);
         }
-        String regex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        String regex = Constants.EMAIL_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
         if (!matcher.matches()) {
-            throw new InvalidEmailException("The email is invalid.");
+            throw new InvalidEmailException(Constants.INVALID_EMAIL_FORMAT_MESSAGE);
         }
     }
 
     private void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
-        String regex = "08[7-9][0-9]{7}";
+        String regex = Constants.PHONE_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(number);
         if (!matcher.matches()) {
-            throw new InvalidPhoneNumberFormatException("The format is invalid. Should be : 08(7/8/9).......");
+            throw new InvalidPhoneNumberFormatException(Constants.INVALID_PHONE_FORMAT_MESSAGE);
         }
     }
 
     private void validateCity(String city) throws InvalidCityException {
         if (city.length() == 0) {
-            throw new InvalidCityException("The city field can't be empty");
+            throw new InvalidCityException(Constants.EMPTY_CITY_NAME_FIELD_MESSAGE);
         }
-        if (city.length() > 20) {
-            throw new InvalidCityException("Max length 20");
+        if (city.length() > Constants.CITY_NAME_MAX_LENGTH) {
+            throw new InvalidCityException(Constants.CITY_NAME_MAX_LENGTH_EXCEEDED_MESSAGE);
         }
     }
 
     private void validateName(String name) throws InvalidNameException {
-        if (name.length() == 0 || name.length() > 30) {
-            throw new InvalidNameException("The name must be between 0 and 30 characters.");
+        if (name.length() == 0 || name.length() > Constants.BUSINESS_NAME_MAX_LENGTH) {
+            throw new InvalidNameException(Constants.BUSINESS_NAME_INVALID_LENGTH_MESSAGE);
         }
     }
 
     public void validateUniqueBusiness(String businessName, String businessCity) throws BusinessAlreadyExistsException {
         if (businessAccessor.getBusinessByNameAndCity(businessName, businessCity) != null) {
-            throw new BusinessAlreadyExistsException("Business with this name from this city already exists");
+            throw new BusinessAlreadyExistsException(Constants.BUSINESS_NOT_UNIQUE_MESSAGE);
         }
     }
 }

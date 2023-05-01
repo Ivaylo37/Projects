@@ -3,9 +3,9 @@ package org.scalefocus.review;
 import org.scalefocus.business.BusinessService;
 import org.scalefocus.customExceptions.*;
 import org.scalefocus.user.UserService;
+import org.scalefocus.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -14,6 +14,7 @@ public class ReviewService {
     private final ReviewAccessor reviewAccessor;
     private final UserService userService;
     private final BusinessService businessService;
+
     @Autowired
     public ReviewService(ReviewAccessor reviewAccessor, UserService userService, BusinessService businessService) {
         this.reviewAccessor = reviewAccessor;
@@ -21,7 +22,7 @@ public class ReviewService {
         this.businessService = businessService;
     }
 
-    public List<Review> getAllReviews(){
+    public List<Review> getAllReviews() {
         return reviewAccessor.getAllReviews();
     }
 
@@ -46,14 +47,16 @@ public class ReviewService {
     public void validateBusinessId(int businessId) throws BusinessNotFoundException {
         businessService.getBusinessById(businessId);
     }
+
     public void validateRating(int rating) throws InvalidRatingException {
-        if (rating < 1 || rating > 5){
-            throw new InvalidRatingException("Rating should be 1 and 5");
+        if (rating < Constants.MIN_RATING_VALUE || rating > Constants.MAX_RATING_VALUE) {
+            throw new InvalidRatingException(Constants.INVALID_RATING_MESSAGE);
         }
     }
+
     public void validateFeedback(String feedback) throws InvalidFeedbackException {
-        if (feedback == null || feedback.length() == 0){
-            throw new InvalidFeedbackException("The feedback can't be empty.");
+        if (feedback == null || feedback.length() == 0) {
+            throw new InvalidFeedbackException(Constants.EMPTY_FEEDBACK_MESSAGE);
         }
     }
 }

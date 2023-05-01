@@ -1,19 +1,19 @@
 package org.scalefocus.review;
 
 import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 @Component
 public class ReviewMapper {
 
-    public List<Review> mapReviewsResultSetToReviews(ResultSet resultSet){
+    public List<Review> mapReviewsResultSetToReviews(ResultSet resultSet) {
         List<Review> reviews = new ArrayList<>();
-        try (resultSet){
-            while (resultSet.next()){
+        try (resultSet) {
+            while (resultSet.next()) {
                 int id = resultSet.getInt(1);
                 int userId = resultSet.getInt(2);
                 int businessID = resultSet.getInt(3);
