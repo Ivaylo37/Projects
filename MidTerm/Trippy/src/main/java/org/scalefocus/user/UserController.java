@@ -57,10 +57,8 @@ public class UserController {
         try {
             userService.createUser(userRequest.getUsername(), userRequest.getEmail(),
                     userRequest.getPhone(), userRequest.getCity());
-        } catch (InvalidUsernameException | InvalidPhoneNumberFormatException | InvalidEmailException e) {
+        } catch (InvalidCityException | InvalidUsernameException | InvalidPhoneNumberFormatException | InvalidEmailException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
-        } catch (InvalidCityException e) {
-            throw new RuntimeException(e); //Todo
         }
         return ResponseEntity.status(201).build();
     }

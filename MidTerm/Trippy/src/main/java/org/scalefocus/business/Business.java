@@ -1,15 +1,17 @@
 package org.scalefocus.business;
 
+import org.scalefocus.review.Review;
+
 import java.util.List;
 
 public class Business {
-    int id;
-    String type;
-    int rating;
-    List<String> reviews;
-    String city;
-    String phone;
-    String email;
+    private int id;
+    private String type;
+    private int rating;
+    private List<Review> reviews;
+    private String city;
+    private String phone;
+    private String email;
 
     public Business(int id, String type, String city, String phone, String email) {
         this.id = id;
@@ -36,7 +38,10 @@ public class Business {
         return rating;
     }
 
-    public List<String> getReviews() {
+    public int getId() {
+        return id;
+    }
+    public List<Review> getReviews() {
         return reviews;
     }
 
@@ -50,5 +55,9 @@ public class Business {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

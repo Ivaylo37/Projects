@@ -1,6 +1,7 @@
 package org.scalefocus.business;
 
 import org.scalefocus.customExceptions.*;
+import org.scalefocus.review.Review;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -14,25 +15,42 @@ import java.util.regex.Pattern;
 public class BusinessService {
 
     private final BusinessAccessor businessAccessor;
+
     @Autowired
     public BusinessService(BusinessAccessor businessAccessor) {
         this.businessAccessor = businessAccessor;
     }
 
     public List<Business> getAllBusinesses(){
-        return businessAccessor.getAllBusinesses();
+        return setReviewsToBusinesses(businessAccessor.getAllBusinesses());
     }
 
     public List<Business> getBusinessesByType(String type) throws BusinessNotFoundException {
-        return businessAccessor.getBusinessByType(type);
+        return setReviewsToBusinesses(businessAccessor.getBusinessByType(type));
     }
 
     public List<Business> getBusinessesByCity(String city) throws BusinessNotFoundException {
-        return businessAccessor.getBusinessByCity(city);
+        return setReviewsToBusinesses(businessAccessor.getBusinessByCity(city));
     }
 
     public List<Business> getBusinessesByRating(int rating) throws BusinessNotFoundException {
-        return businessAccessor.getBusinessByRating(rating);
+        return setReviewsToBusinesses(businessAccessor.getBusinessByRating(rating));
+    }
+
+    public Business getBusinessById(int businessId) throws BusinessNotFoundException {
+        return businessAccessor.getBusinessById(businessId);
+    }
+
+    public List<Review> getReviewsByBusiness(int businessId) {
+        return businessAccessor.getReviewsByBusiness(businessId);
+    }
+    public List<Business> setReviewsToBusinesses(List<Business> businesses){
+        List<Business> businessesWithReviews = new ArrayList<>();
+        for(Business business : businesses){
+            business.setReviews(getReviewsByBusiness(business.getId()));
+            businessesWithReviews.add(business);
+        }
+        return businessesWithReviews;
     }
 
     public BusinessRequest addBusiness(BusinessRequest businessRequest) throws InvalidTypeException, InvalidEmailException, InvalidPhoneNumberFormatException, InvalidCityException {

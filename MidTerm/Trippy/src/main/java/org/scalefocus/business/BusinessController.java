@@ -18,7 +18,7 @@ public class BusinessController {
     }
 
     @GetMapping
-    public ResponseEntity printAllBusinesses(@RequestParam(required = false) String type,
+    public ResponseEntity printBusinesses(@RequestParam(required = false) String type,
                                              @RequestParam(required = false) String city,
                                              @RequestParam(required = false) Integer rating)
     {
