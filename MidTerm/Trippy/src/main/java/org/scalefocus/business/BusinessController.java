@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "businesses")
+@RequestMapping(value = "business")
 public class BusinessController {
 
     private final BusinessService businessService;
@@ -57,6 +57,27 @@ public class BusinessController {
         } catch (InvalidTypeException | InvalidCityException | InvalidPhoneNumberFormatException |
                  InvalidEmailException | InvalidNameException | BusinessAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+        }
+        return ResponseEntity.status(201).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity editBusiness(@PathVariable Integer id,
+                                       @RequestParam(required = false) String email,
+                                       @RequestParam(required = false) String phone) {
+        if (email != null) {
+            try {
+                businessService.updateEmail(id, email);
+            } catch (InvalidEmailException e) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+            }
+        }
+        if (phone != null) {
+            try {
+                businessService.updatePhoneNumber(id, phone);
+            } catch (InvalidPhoneNumberFormatException e) {
+                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(e.getMessage());
+            }
         }
         return ResponseEntity.status(201).build();
     }

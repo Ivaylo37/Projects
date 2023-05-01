@@ -159,6 +159,30 @@ public class BusinessAccessor {
         }
     }
 
+    public void updateEmail(int businessId, String newEmail){
+        String sql = "UPDATE trippy.business SET email = ? WHERE id = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, newEmail);
+            preparedStatement.setInt(2, businessId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updatePhoneNumber(int businessId, String newPhoneNumber){
+        String sql = "UPDATE trippy.business SET phone = ? WHERE id = ?";
+        try (Connection connection = DBConnector.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, newPhoneNumber);
+            preparedStatement.setInt(2, businessId);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Business getBusinessByNameAndCity(String name, String city){
         List<Business> businesses;
         String sql = "SELECT * FROM trippy.business WHERE name = ? AND city = ?";

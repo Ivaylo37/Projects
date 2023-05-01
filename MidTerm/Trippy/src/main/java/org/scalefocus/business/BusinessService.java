@@ -98,6 +98,15 @@ public class BusinessService {
         return businessAccessor.addBusiness(validatedBusinessRequest);
     }
 
+    public void updateEmail(int businessId, String newEmail) throws InvalidEmailException{
+            validateEmail(newEmail);
+            businessAccessor.updateEmail(businessId, newEmail);
+    }
+
+    public void updatePhoneNumber(int businessId, String newPhoneNumber) throws InvalidPhoneNumberFormatException {
+        validatePhoneNumber(newPhoneNumber);
+        businessAccessor.updatePhoneNumber(businessId, newPhoneNumber);
+    }
     public void validateType(String type) throws InvalidTypeException {
         List<String> validTypes = new ArrayList<>();
         validTypes.add("bar");
