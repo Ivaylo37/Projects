@@ -7,6 +7,7 @@ import org.scalefocus.model.request.BusinessRequest;
 import org.scalefocus.exception.BusinessNotFoundException;
 import org.scalefocus.model.Review;
 import org.scalefocus.mapper.ReviewMapper;
+import org.scalefocus.util.Constants;
 import org.scalefocus.util.db.DBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -42,7 +43,7 @@ public class BusinessAccessor {
         return businesses;
     }
 
-    public List<Business> getBusinessByType(Type type) { //TODO getAllBusinessesByType
+    public List<Business> getAllBusinessesByType(Type type) {
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE type = ?";
         try (Connection connection = dbConnector.getConnection();
@@ -51,7 +52,7 @@ public class BusinessAccessor {
             ResultSet resultSet = preparedStatement.executeQuery();
             business = businessMapper.mapResultSetToBusinesses(resultSet);
             if (business.size() == 0) {
-                throw new BusinessNotFoundException("Businesses from this type not found");
+                throw new BusinessNotFoundException(Constants.BUSINESSES_FROM_THIS_TYPE_NOT_FOUND_MESSAGE);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -68,7 +69,7 @@ public class BusinessAccessor {
             ResultSet resultSet = preparedStatement.executeQuery();
             business = businessMapper.mapResultSetToBusinesses(resultSet);
             if (business.size() == 0) {
-                throw new BusinessNotFoundException("Businesses from this city not found"); //TODO
+                throw new BusinessNotFoundException(Constants.BUSINESSES_FROM_THIS_CITY_NOT_FOUND_MESSAGE);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -123,7 +124,7 @@ public class BusinessAccessor {
             ResultSet resultSet = preparedStatement.executeQuery();
             businesses = businessMapper.mapResultSetToBusinesses(resultSet);
             if (businesses.size() == 0) {
-                throw new BusinessNotFoundException("Businesses with id " + businessId + " not found");//todo
+                throw new BusinessNotFoundException(Constants.BUSINESSES_WITH_THIS_ID_NOT_FOUND_MESSAGE);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

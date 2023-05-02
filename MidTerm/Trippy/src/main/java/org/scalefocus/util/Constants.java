@@ -1,7 +1,5 @@
 package org.scalefocus.util;
 
-import jakarta.servlet.http.PushBuilder;
-
 public class Constants {
    public static final String EMAIL_VALIDATION_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
 
@@ -44,5 +42,11 @@ public class Constants {
    public static final String INVALID_USERNAME_LENGTH_MESSAGE = "The username must contain from 4 to 20 characters";
 
    public static final String USERNAME_NOT_UNIQUE_MESSAGE = "Username already taken.";
+
+   public static final String BUSINESSES_FROM_THIS_TYPE_NOT_FOUND_MESSAGE = "Businesses from this type not found";
+
+   public static final String BUSINESSES_FROM_THIS_CITY_NOT_FOUND_MESSAGE = "Businesses from this city not found";
+
+   public static final String BUSINESSES_WITH_THIS_ID_NOT_FOUND_MESSAGE = "Business with this id not found";
 
 }

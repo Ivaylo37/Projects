@@ -30,7 +30,7 @@ public class BusinessService {
     }
 
     public List<Business> getBusinessesByType(Type type) {
-        return setReviewsToBusinesses(businessAccessor.getBusinessByType(type));
+        return setReviewsToBusinesses(businessAccessor.getAllBusinessesByType(type));
     }
 
     public List<Business> getBusinessesByCity(String city) {
