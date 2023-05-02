@@ -1,6 +1,4 @@
-package org.scalefocus.domain;
-
-import org.scalefocus.domain.Review;
+package org.scalefocus.model;
 
 import java.time.LocalDate;
 import java.util.List;

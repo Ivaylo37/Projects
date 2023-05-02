@@ -1,4 +1,4 @@
-package org.scalefocus.domain;
+package org.scalefocus.model;
 
 import org.scalefocus.enums.Type;
 

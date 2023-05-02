@@ -1,10 +1,11 @@
-package org.scalefocus.repository;
+package org.scalefocus.accessor;
 
+import org.scalefocus.enums.Type;
 import org.scalefocus.mapper.BusinessMapper;
-import org.scalefocus.domain.Business;
-import org.scalefocus.domain.request.BusinessRequest;
+import org.scalefocus.model.Business;
+import org.scalefocus.model.request.BusinessRequest;
 import org.scalefocus.exception.BusinessNotFoundException;
-import org.scalefocus.domain.Review;
+import org.scalefocus.model.Review;
 import org.scalefocus.mapper.ReviewMapper;
 import org.scalefocus.util.db.DBConnector;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +20,19 @@ public class BusinessAccessor {
 
     private final BusinessMapper businessMapper;
     private final ReviewMapper reviewMapper;
+    private final DBConnector dbConnector;
 
     @Autowired
-    public BusinessAccessor(BusinessMapper businessMapper, ReviewMapper reviewMapper) {
+    public BusinessAccessor(BusinessMapper businessMapper, ReviewMapper reviewMapper, DBConnector dbConnector) {
         this.businessMapper = businessMapper;
         this.reviewMapper = reviewMapper;
+        this.dbConnector = dbConnector;
     }
 
     public List<Business> getAllBusinesses() {
         List<Business> businesses;
         String sql = "SELECT * FROM trippy.business";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
             businesses = businessMapper.mapResultSetToBusinesses(resultSet);
@@ -39,12 +42,12 @@ public class BusinessAccessor {
         return businesses;
     }
 
-    public List<Business> getBusinessByType(String type) {
+    public List<Business> getBusinessByType(Type type) { //TODO getAllBusinessesByType
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE type = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
-            preparedStatement.setString(1, type);
+            preparedStatement.setString(1, type.name());
             ResultSet resultSet = preparedStatement.executeQuery();
             business = businessMapper.mapResultSetToBusinesses(resultSet);
             if (business.size() == 0) {
@@ -59,13 +62,13 @@ public class BusinessAccessor {
     public List<Business> getBusinessByCity(String city) {
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE city = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             preparedStatement.setString(1, city);
             ResultSet resultSet = preparedStatement.executeQuery();
             business = businessMapper.mapResultSetToBusinesses(resultSet);
             if (business.size() == 0) {
-                throw new BusinessNotFoundException("Businesses from this city not found");
+                throw new BusinessNotFoundException("Businesses from this city not found"); //TODO
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,14 +79,14 @@ public class BusinessAccessor {
     public Business getBusinessByNameAndCity(String name, String city) {
         List<Business> businesses;
         String sql = "SELECT * FROM trippy.business WHERE name = ? AND city = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, name);
             preparedStatement.setString(2, city);
             ResultSet resultSet = preparedStatement.executeQuery();
             businesses = businessMapper.mapResultSetToBusinesses(resultSet);
             if (businesses.size() == 0) {
-                return null;//TODO
+                return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -94,7 +97,7 @@ public class BusinessAccessor {
     public List<Business> getBusinessByRating(int rating) {
         List<Business> business;
         String sql = "SELECT * FROM trippy.business WHERE rating BETWEEN ? and ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
             int ratingTimesTen = rating * 10;
             preparedStatement.setInt(1, rating);
@@ -114,13 +117,13 @@ public class BusinessAccessor {
     public Business getBusinessById(int businessId) {
         List<Business> businesses;
         String sql = "SELECT * FROM trippy.business WHERE id = ?";
-        try (Connection connection = DBConnector.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+        try (Connection connection = dbConnector.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, businessId);
             ResultSet resultSet = preparedStatement.executeQuery();
             businesses = businessMapper.mapResultSetToBusinesses(resultSet);
             if (businesses.size() == 0) {
-                throw new BusinessNotFoundException("Businesses with id " + businessId + "not found");
+                throw new BusinessNotFoundException("Businesses with id " + businessId + " not found");//todo
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -131,7 +134,7 @@ public class BusinessAccessor {
     public List<Review> getReviewsByBusiness(int businessId) {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM trippy.review WHERE business_id = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, businessId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -144,7 +147,7 @@ public class BusinessAccessor {
 
     public BusinessRequest createBusiness(BusinessRequest businessRequest) {
         String sql = "INSERT INTO trippy.business(type, name, email, phone, city) VALUES (?, ?, ?, ?, ?);";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, businessRequest.getType().name());
             preparedStatement.setString(2, businessRequest.getName());
@@ -160,7 +163,7 @@ public class BusinessAccessor {
 
     public void updateRating(int businessId, int rating) {
         String sql = "UPDATE trippy.business SET rating = ? WHERE id = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, rating);
             preparedStatement.setInt(2, businessId);
@@ -171,7 +174,7 @@ public class BusinessAccessor {
     }
     public void updateReviewsCount(int businessId, int reviewsCount) {
         String sql = "UPDATE trippy.business SET reviews_count = ? WHERE id = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, reviewsCount);
             preparedStatement.setInt(2, businessId);
@@ -182,7 +185,7 @@ public class BusinessAccessor {
     }
     public void updateEmail(int businessId, String newEmail) {
         String sql = "UPDATE trippy.business SET email = ? WHERE id = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, newEmail);
             preparedStatement.setInt(2, businessId);
@@ -193,7 +196,7 @@ public class BusinessAccessor {
     }
     public void updatePhoneNumber(int businessId, String newPhoneNumber) {
         String sql = "UPDATE trippy.business SET phone = ? WHERE id = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, newPhoneNumber);
             preparedStatement.setInt(2, businessId);

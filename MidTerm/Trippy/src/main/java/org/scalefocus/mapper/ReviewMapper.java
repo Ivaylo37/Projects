@@ -1,6 +1,6 @@
 package org.scalefocus.mapper;
 
-import org.scalefocus.domain.Review;
+import org.scalefocus.model.Review;
 import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;

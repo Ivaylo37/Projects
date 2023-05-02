@@ -1,6 +1,6 @@
 package org.scalefocus.mapper;
 
-import org.scalefocus.domain.User;
+import org.scalefocus.model.User;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;

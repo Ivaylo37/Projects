@@ -1,7 +1,7 @@
 package org.scalefocus.service;
 
-import org.scalefocus.domain.Review;
-import org.scalefocus.repository.ReviewAccessor;
+import org.scalefocus.model.Review;
+import org.scalefocus.accessor.ReviewAccessor;
 import org.scalefocus.exception.*;
 import org.scalefocus.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;

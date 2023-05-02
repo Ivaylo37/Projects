@@ -1,4 +1,4 @@
-package org.scalefocus.domain;
+package org.scalefocus.model;
 
 import java.time.LocalDate;
 

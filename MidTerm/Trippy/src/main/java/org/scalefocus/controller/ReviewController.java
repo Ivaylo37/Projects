@@ -1,10 +1,8 @@
 package org.scalefocus.controller;
 
-import org.scalefocus.exception.*;
-import org.scalefocus.domain.Review;
-import org.scalefocus.domain.request.ReviewRequest;
+import org.scalefocus.model.Review;
+import org.scalefocus.model.request.ReviewRequest;
 import org.scalefocus.service.ReviewService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

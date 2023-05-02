@@ -1,4 +1,4 @@
-package org.scalefocus.domain.request;
+package org.scalefocus.model.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

@@ -1,9 +1,9 @@
 package org.scalefocus.service;
 
 import org.scalefocus.exception.*;
-import org.scalefocus.domain.Review;
-import org.scalefocus.domain.User;
-import org.scalefocus.repository.UserAccessor;
+import org.scalefocus.model.Review;
+import org.scalefocus.model.User;
+import org.scalefocus.accessor.UserAccessor;
 import org.scalefocus.util.Constants;
 import org.springframework.stereotype.Service;
 
@@ -76,12 +76,7 @@ public class UserService {
         if (username.length() < Constants.MIN_USERNAME_LENGTH || username.length() > Constants.MAX_USERNAME_LENGTH) {
             throw new InvalidUsernameException(Constants.INVALID_USERNAME_LENGTH_MESSAGE);
         }
-        User user = null;
-        try {
-            user = getUserByUsername(username);
-        } catch (UserNotFoundException e) {//TODO
-
-        }
+        User user = getUserByUsername(username);
         if (user != null) {
             throw new InvalidUsernameException(Constants.USERNAME_NOT_UNIQUE_MESSAGE);
         }

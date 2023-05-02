@@ -1,14 +1,12 @@
 package org.scalefocus.controller;
 
-import org.scalefocus.domain.Business;
-import org.scalefocus.domain.request.BusinessRequest;
+import org.scalefocus.model.request.BusinessRequest;
+import org.scalefocus.enums.Type;
 import org.scalefocus.service.BusinessService;
-import org.scalefocus.exception.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/business")
@@ -21,11 +19,10 @@ public class BusinessController {
     }
 
     @GetMapping
-    public ResponseEntity printBusinesses(@RequestParam(required = false) String type,
+    public ResponseEntity printBusinesses(@RequestParam(required = false) Type type, //getBusinesses TODO
                                           @RequestParam(required = false) String city,
                                           @RequestParam(required = false) Integer rating) {
-        List<Business> business;
-        if (type != null) {
+        if (Objects.nonNull(type)) {//TODO
             return ResponseEntity.ok(businessService.getBusinessesByType(type));
         }
         if (city != null) {
@@ -34,8 +31,7 @@ public class BusinessController {
         if (rating != null) {
             return ResponseEntity.ok(businessService.getBusinessesByRating(rating));
         }
-        business = businessService.getAllBusinesses();
-        return ResponseEntity.ok(business);
+        return ResponseEntity.ok(businessService.getAllBusinesses());
     }
 
     @PostMapping
@@ -45,7 +41,7 @@ public class BusinessController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity editBusiness(@PathVariable Integer id,
+    public ResponseEntity editBusiness(@PathVariable Integer id, //updateBusiness TODO
                                        @RequestParam(required = false) String email,
                                        @RequestParam(required = false) String phone) {
         if (email != null) {
@@ -54,6 +50,6 @@ public class BusinessController {
         if (phone != null) {
             businessService.updatePhoneNumber(id, phone);
         }
-        return ResponseEntity.status(201).build();
+        return ResponseEntity.status(201).build(); //TODO use the proper way !
     }
 }

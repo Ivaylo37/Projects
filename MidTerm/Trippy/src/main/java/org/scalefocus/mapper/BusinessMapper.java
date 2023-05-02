@@ -1,6 +1,6 @@
 package org.scalefocus.mapper;
 
-import org.scalefocus.domain.Business;
+import org.scalefocus.model.Business;
 import org.scalefocus.enums.Type;
 import org.springframework.stereotype.Component;
 
@@ -31,4 +31,5 @@ public class BusinessMapper {
         }
         return businesses;
     }
+    //TODO
 }

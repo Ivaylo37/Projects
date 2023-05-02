@@ -1,6 +1,6 @@
-package org.scalefocus.repository;
+package org.scalefocus.accessor;
 
-import org.scalefocus.domain.Review;
+import org.scalefocus.model.Review;
 import org.scalefocus.exception.ReviewNotFoundException;
 import org.scalefocus.mapper.ReviewMapper;
 import org.scalefocus.util.db.DBConnector;
@@ -16,16 +16,19 @@ import java.util.List;
 public class ReviewAccessor {
 
     private final ReviewMapper reviewMapper;
+    
+    private final DBConnector dbConnector;
 
     @Autowired
-    public ReviewAccessor(ReviewMapper reviewMapper) {
+    public ReviewAccessor(ReviewMapper reviewMapper, DBConnector dbConnector) {
         this.reviewMapper = reviewMapper;
+        this.dbConnector = dbConnector;
     }
 
     public List<Review> getAllReviews() {
         List<Review> reviews;
         String sql = "SELECT * FROM trippy.review";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
             reviews = reviewMapper.mapReviewsResultSetToReviews(resultSet);
@@ -37,7 +40,7 @@ public class ReviewAccessor {
 
     public void createReview(int userId, int businessId, int rating, String feedback) {
         String sql = "INSERT INTO trippy.review(user_id, business_id, rating, feedback, stamp_created) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setInt(2, businessId);
@@ -53,7 +56,7 @@ public class ReviewAccessor {
     public List<Review> getReviewsByBusiness(int businessId) throws ReviewNotFoundException {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM trippy.review WHERE business_id = ?";
-        try (Connection connection = DBConnector.getConnection();
+        try (Connection connection = dbConnector.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, businessId);
             ResultSet resultSet = preparedStatement.executeQuery();

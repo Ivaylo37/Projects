@@ -1,10 +1,8 @@
 package org.scalefocus.controller;
 
-import org.scalefocus.exception.*;
-import org.scalefocus.domain.User;
-import org.scalefocus.domain.request.UserRequest;
+import org.scalefocus.model.User;
+import org.scalefocus.model.request.UserRequest;
 import org.scalefocus.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

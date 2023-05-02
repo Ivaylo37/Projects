@@ -1,11 +1,11 @@
 package org.scalefocus.service;
 
-import org.scalefocus.domain.Business;
-import org.scalefocus.repository.BusinessAccessor;
-import org.scalefocus.domain.request.BusinessRequest;
+import org.scalefocus.model.Business;
+import org.scalefocus.accessor.BusinessAccessor;
+import org.scalefocus.model.request.BusinessRequest;
 import org.scalefocus.enums.Type;
 import org.scalefocus.exception.*;
-import org.scalefocus.domain.Review;
+import org.scalefocus.model.Review;
 import org.scalefocus.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class BusinessService {
         return setReviewsToBusinesses(businessAccessor.getAllBusinesses());
     }
 
-    public List<Business> getBusinessesByType(String type) {
+    public List<Business> getBusinessesByType(Type type) {
         return setReviewsToBusinesses(businessAccessor.getBusinessByType(type));
     }
 
