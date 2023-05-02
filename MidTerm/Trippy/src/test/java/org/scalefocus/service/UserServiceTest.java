@@ -1,58 +1,57 @@
 package org.scalefocus.service;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.scalefocus.exception.*;
-import org.scalefocus.model.User;
-
-import java.time.LocalDate;
-
-import static org.testng.Assert.assertThrows;
+import org.scalefocus.accessor.UserAccessor;
+import org.scalefocus.exception.InvalidCityException;
+import org.scalefocus.exception.InvalidEmailException;
+import org.scalefocus.exception.InvalidPhoneNumberFormatException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
+
     @Mock
-    UserService userService;
+    private UserAccessor userAccessor;
 
-    @Test
-    public void testCreateUser_Works_Properly() throws InvalidUsernameException, InvalidPhoneNumberFormatException, InvalidEmailException {
-        //Arrange - Given
-        String username = "Ivailo";
-        String email = "test@gmail.com";
-        String phoneNumber = "0888888888";
-        String cityName = "Sofia";
-        //LocalDate maybe ...
-        User user = new User(1, username, email, phoneNumber, cityName, LocalDate.now());
+    @InjectMocks
+    private UserService userService;
 
-        //Act - When
-        Mockito.when(userService.createUser(username, email, phoneNumber, cityName)).thenReturn(user);
-        User objectToTest = userService.createUser(username, email, phoneNumber, cityName);
-
-        //Assert - Then
-        //assert the id !
-        Assert.assertEquals(user.getUsername(), objectToTest.getUsername());
-        Assert.assertEquals(email, objectToTest.getEmail());
-        Assert.assertEquals(phoneNumber, objectToTest.getPhone());
-        Assert.assertEquals(cityName, objectToTest.getCity());
-        Assert.assertEquals(cityName, objectToTest.getCity());
+    @Test(expected = InvalidCityException.class)
+    public void testValidateCityWithEmptyCity() throws InvalidCityException {
+        String city = "";
+        userService.validateCity(city);
     }
 
     @Test
-    public void testCreateUser_Throws_When_UsernameLengthIsUnderMinLength() {
-        //Arrange, Act
-        String username = "I";
-        String email = "test@gmail.com";
-        String phoneNumber = "0888888888";
-        String cityName = "Sofia";
+    public void testValidateCityWithValidCity() throws InvalidCityException {
+        String city = "Valid City Name";
+        userService.validateCity(city);
+    }
 
-          Mockito.when(userService.createUser(username, email, phoneNumber, cityName))
-                  .thenThrow(InvalidUsernameException.class);
+    @Test(expected = InvalidPhoneNumberFormatException.class)
+    public void testValidatePhoneNumberWithInvalidFormat() throws InvalidPhoneNumberFormatException {
+        String phoneNumber = "123456789";
+        userService.validatePhoneNumber(phoneNumber);
+    }
 
-        //Assert
-        assertThrows(InvalidUsernameException.class, () -> userService.createUser(username, email, phoneNumber, cityName));
+    @Test
+    public void testValidatePhoneNumberWithValidFormat() throws InvalidPhoneNumberFormatException {
+        String phoneNumber = "0877565112";
+        userService.validatePhoneNumber(phoneNumber);
+    }
+
+    @Test(expected = InvalidEmailException.class)
+    public void testValidateEmailWithInvalidFormat() throws InvalidEmailException {
+        String email = "test.com";
+        userService.validateEmail(email);
+    }
+
+    @Test
+    public void testValidateEmailWithValidFormat() throws InvalidEmailException {
+        String email = "test@test.com";
+        userService.validateEmail(email);
     }
 }

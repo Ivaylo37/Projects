@@ -61,7 +61,7 @@ public class BusinessService {
         return businessesWithReviews;
     }
 
-    private void updateRating(int businessId, int rating) {
+    void updateRating(int businessId, int rating) {
         businessAccessor.updateRating(businessId, rating);
     }
 
@@ -113,7 +113,7 @@ public class BusinessService {
         }
     }
 
-    private void validateEmail(String email) throws InvalidEmailException {
+    void validateEmail(String email) throws InvalidEmailException {
         if (email.length() > Constants.EMAIL_MAX_LENGTH) {
             throw new InvalidEmailException(Constants.EMAIL_MAX_LENGTH_EXCEEDED_MESSAGE);
         }
@@ -125,7 +125,7 @@ public class BusinessService {
         }
     }
 
-    private void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
+    void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
         String regex = Constants.PHONE_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(number);
@@ -134,7 +134,7 @@ public class BusinessService {
         }
     }
 
-    private void validateCity(String city) {
+    void validateCity(String city) {
         if (city.length() == 0) {
             throw new InvalidCityException(Constants.EMPTY_CITY_NAME_FIELD_MESSAGE);
         }
@@ -143,7 +143,7 @@ public class BusinessService {
         }
     }
 
-    private void validateName(String name) throws InvalidNameException {
+    void validateName(String name) throws InvalidNameException {
         if (name.length() == 0 || name.length() > Constants.BUSINESS_NAME_MAX_LENGTH) {
             throw new InvalidNameException(Constants.BUSINESS_NAME_INVALID_LENGTH_MESSAGE);
         }

@@ -63,7 +63,7 @@ public class UserService {
         return userAccessor.createUser(username, email, phone, city);
     }
 
-    private void validateEmail(String email) throws InvalidEmailException {
+    void validateEmail(String email) throws InvalidEmailException {
         String regex = Constants.EMAIL_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(email);
@@ -82,7 +82,7 @@ public class UserService {
         }
     }
 
-    private void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
+    void validatePhoneNumber(String number) throws InvalidPhoneNumberFormatException {
         String regex = Constants.PHONE_VALIDATION_REGEX;
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(number);
@@ -91,7 +91,7 @@ public class UserService {
         }
     }
 
-    private void validateCity(String city) {
+    void validateCity(String city) {
         if (city.length() == 0) {
             throw new InvalidCityException(Constants.EMPTY_CITY_NAME_FIELD_MESSAGE);
         }
